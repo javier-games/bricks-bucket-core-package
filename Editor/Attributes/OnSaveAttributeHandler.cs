@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Reflection;
-using BricksBucket.Core.Editor;
+using BricksBucket.Core.Attributes;
 using UnityEditor;
 using UnityEngine;
 
-namespace BricksBucket.Core.Attributes.Editor
+namespace BricksBucket.Core.Editor.Attributes
 {
     /// <summary>
     ///

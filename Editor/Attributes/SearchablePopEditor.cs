@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace BricksBucket.Core.Attributes.Editor
+namespace BricksBucket.Core.Editor.Attributes
 {
     // ReSharper disable CommentTypo
     /// <!-- SearchablePopup -->

@@ -1,5 +1,5 @@
 using BricksBucket.Core.Attributes;
-using BricksBucket.Core.Attributes.Editor;
+using BricksBucket.Core.Editor.Attributes;
 using UnityEditor;
 using UnityEngine;
 

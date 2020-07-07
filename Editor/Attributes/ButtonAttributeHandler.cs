@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using BricksBucket.Core.Attributes;
 using UnityEditor;
 using UnityEngine;
-
 using Object = UnityEngine.Object;
 
-namespace BricksBucket.Core.Attributes.Editor
+namespace BricksBucket.Core.Editor.Attributes
 {
 	// ReSharper disable CommentTypo
     /// <!-- ButtonAttributeHandler -->

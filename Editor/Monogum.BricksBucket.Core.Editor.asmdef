@@ -1,0 +1,15 @@
+{
+    "name": "BricksBucket.Core.Editor",
+    "references": [
+        "GUID:8e275888f7893418e8887b593faa5a02"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

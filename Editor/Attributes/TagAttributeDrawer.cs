@@ -1,15 +1,16 @@
-﻿using UnityEditor;
+﻿using BricksBucket.Core.Attributes;
+using UnityEditor;
 using UnityEngine;
 
-namespace BricksBucket.Core.Attributes.Editor
+namespace BricksBucket.Core.Editor.Attributes
 {
     // ReSharper disable CommentTypo
-    /// <!-- LayerAttributeDrawer -->
+    /// <!-- TagAttributeDrawer -->
     ///
     /// <summary>
     ///
     /// <para>
-    /// Editor tool to draw int as LayerMask.
+    /// Editor tool to draw a menu for a string.
     /// </para>
     /// 
     /// <para>
@@ -23,13 +24,12 @@ namespace BricksBucket.Core.Attributes.Editor
     /// Deadcows/MyBox</seealso>
     /// 
     /// <!-- By Javier García | @jvrgms | 2020 -->
-    // ReSharper restore CommentTypo
-    [CustomPropertyDrawer (typeof (LayerAttribute))]
-    public class LayerAttributeDrawer : PropertyDrawer
+    [CustomPropertyDrawer (typeof (TagAttribute))]
+    public class TagAttributeDrawer : PropertyDrawer
     {
         #region Properties
 
-        /// <summary> Whether the type has been checked. </summary>
+        /// <summary> Wether ther type has been checked. </summary>
         private bool _checked;
 
         #endregion
@@ -48,16 +48,16 @@ namespace BricksBucket.Core.Attributes.Editor
         public override void
         OnGUI (Rect position, SerializedProperty property, GUIContent label)
         {
-            if (property.propertyType != SerializedPropertyType.Integer)
+            if (property.propertyType != SerializedPropertyType.String)
             {
                 if (!_checked)
                 {
                     var serializedObject = property.serializedObject;
-                    // TODO: Replace Log Method in LayerAttribute.OnGUI.
+                    // TODO: Replace Log Method in TagAttributeDrawer.OnGUI.
                     Debug.LogWarning (
                         $"Property {property.name} in object " + 
                         $"{serializedObject?.targetObject} is of wrong type." +
-                        "Type expected: Int",
+                        "Type expected: String",
                         serializedObject?.targetObject
                     );
                     _checked = true;
@@ -66,13 +66,14 @@ namespace BricksBucket.Core.Attributes.Editor
                 return;
             }
 
-            property.intValue = EditorGUI.LayerField (
+            property.stringValue = EditorGUI.TagField (
                 position: position,
                 label: label,
-                layer: property.intValue
+                tag: property.stringValue
             );
         }
 
         #endregion
     }
+
 }

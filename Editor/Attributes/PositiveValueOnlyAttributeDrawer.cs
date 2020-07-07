@@ -1,7 +1,8 @@
-﻿using UnityEditor;
+﻿using BricksBucket.Core.Attributes;
+using UnityEditor;
 using UnityEngine;
 
-namespace BricksBucket.Core.Attributes.Editor
+namespace BricksBucket.Core.Editor.Attributes
 {
 	// ReSharper disable CommentTypo
 	/// <!-- PositiveValueOnlyAttributeDrawer -->

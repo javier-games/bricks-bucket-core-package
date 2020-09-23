@@ -38,8 +38,7 @@ namespace Monogum.BricksBucket.Core
             else
             {
                 _lastStaticTest = title;
-                Tests[_lastStaticTest] =
-                    new TimeTest (title, useMillis);
+                Tests[_lastStaticTest] = new TimeTest (title, useMillis);
             }
         }
 
@@ -69,7 +68,7 @@ namespace Monogum.BricksBucket.Core
         /// </summary>
         /// <param name="title">Name of the test.</param>
         [Conditional ("DEBUG")]
-        public static void EndTimeTest (string title = null)
+        public static void StopTimeTest (string title = null)
         {
             title = string.IsNullOrWhiteSpace (title) ? _lastStaticTest : title;
 
@@ -85,6 +84,19 @@ namespace Monogum.BricksBucket.Core
             Tests[title].End ();
             Tests.Remove (title);
             _lastStaticTest = string.Empty;
+        }
+
+        /// <summary>
+        /// Gets the elapsed time.
+        /// </summary>
+        /// <param name="title">Title of the test to look for.</param>
+        /// <returns>Zero if the title could not be found.</returns>
+        public static long GetElapsedMilliseconds (string title = null)
+        {
+            title = string.IsNullOrEmpty (title) ? _lastStaticTest : title;
+            return Tests.ContainsKey (title)
+                ? Tests[title].timer.ElapsedMilliseconds
+                : 0;
         }
         
         #endregion

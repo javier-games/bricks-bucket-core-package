@@ -3,8 +3,15 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using NUnit.Framework;
 
-namespace BricksBucket.Core.Tests.Runtime
+namespace BricksBucket.Core.Tests
 {
+    /// <!-- BucketCoroutinesTestSuit -->
+    ///
+    /// <summary>
+    /// Test suit for the Bucket coroutines.
+    /// </summary>
+    /// 
+    /// <!-- By Javier García | @jvrgms | 2020 -->
     public class BucketCoroutinesTestSuit
     {
         #region Fields

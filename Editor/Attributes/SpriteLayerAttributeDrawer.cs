@@ -1,7 +1,6 @@
 ﻿using Monogum.BricksBucket.Core.Attributes;
 using UnityEditor;
 using UnityEngine;
-
 namespace Monogum.BricksBucket.Core.Editor.Attributes
 {
 	// ReSharper disable CommentTypo
@@ -150,3 +149,4 @@ namespace Monogum.BricksBucket.Core.Editor.Attributes
 		#endregion
 	}
 }
+

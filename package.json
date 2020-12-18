@@ -1,10 +1,10 @@
 {
   "name": "games.monogum.bricksbucket.core",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "displayName": "Bricks Bucket Core Package",
   "description": "Bucket full of bricks to build something great.",
-  "unity": "2019.4",
-  "unityRelease": "1f1",
+  "unity": "2020.1",
+  "unityRelease": "11f1",
   "keywords": [
     "tool",
     "extensions",
@@ -14,7 +14,7 @@
     "com.unity.ugui": "1.0.0"
   },
   "author": {
-    "name": "Javier García",
+    "name": "Monogum",
     "email": "javier@monogum.games",
     "url": "monogum.games"
   }

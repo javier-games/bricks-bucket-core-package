@@ -1,3 +1,4 @@
+<<<<<<< develop
 {
     "name": "Monogum.BricksBucket.Core",
     "rootNamespace": "Monogum.BricksBucket.Core",
@@ -12,3 +13,8 @@
     "versionDefines": [],
     "noEngineReferences": false
 }
+=======
+﻿{
+	"name": "Monogum.BricksBucket.Core.Runtime"
+}
+>>>>>>> Editor/DefineSymbols - Changed Folder Location

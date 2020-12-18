@@ -1,5 +1,10 @@
+<<<<<<< develop
 using Monogum.BricksBucket.Core.Attributes;
 using Monogum.BricksBucket.Core.Editor.Attributes;
+=======
+using BricksBucket.Core.Attributes;
+using BricksBucket.Core.Editor.Attributes;
+>>>>>>> Editor/DefineSymbols - Changed Folder Location
 using UnityEditor;
 using UnityEngine;
 

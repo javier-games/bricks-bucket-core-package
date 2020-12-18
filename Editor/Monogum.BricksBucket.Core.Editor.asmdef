@@ -1,4 +1,5 @@
 {
+<<<<<<< develop
     "name": "Monogum.BricksBucket.Core.Editor",
     "references": [
         "GUID:8e275888f7893418e8887b593faa5a02"
@@ -6,6 +7,13 @@
     "includePlatforms": [
         "Editor"
     ],
+=======
+    "name": "BricksBucket.Core.Editor",
+    "references": [
+        "GUID:8e275888f7893418e8887b593faa5a02"
+    ],
+    "includePlatforms": [],
+>>>>>>> Editor/DefineSymbols - Changed Folder Location
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

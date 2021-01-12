@@ -1,7 +1,7 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace BricksBucket.Core.Generic
+namespace Monogum.BricksBucket.Core.Generics
 {
     /// <!-- IReference -->
     /// <summary>

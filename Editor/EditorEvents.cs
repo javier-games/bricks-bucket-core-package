@@ -6,7 +6,7 @@ using UnityEditor.Build.Reporting;
 using EditorProcessor = UnityEditor.AssetModificationProcessor;
 
 // ReSharper disable UnassignedField.Global
-namespace BricksBucket.Core.Editor
+namespace Monogum.BricksBucket.Core.Editor
 {
     /// <!-- EditorEvents -->
     ///

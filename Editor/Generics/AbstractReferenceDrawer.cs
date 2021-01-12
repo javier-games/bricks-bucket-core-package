@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using System.Collections.Generic;
-using BricksBucket.Core.Editor;
+using Monogum.BricksBucket.Core.Editor;
 using UnityEngine;
 using UnityEditor;
 
-namespace BricksBucket.Core.Generic.Editor
+namespace Monogum.BricksBucket.Core.Generics.Editor
 {/*
     /// <!-- AbstractReferenceDrawer -->
     /// <summary>

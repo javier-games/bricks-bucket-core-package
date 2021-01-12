@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 
-namespace BricksBucket.Core
+namespace Monogum.BricksBucket.Core
 {
     /* TIME BUCKET */
     public static partial class Bucket

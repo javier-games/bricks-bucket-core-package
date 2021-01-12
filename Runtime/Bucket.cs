@@ -1,4 +1,4 @@
-namespace BricksBucket.Core
+namespace Monogum.BricksBucket.Core
 {
 	/// <!-- Bucket -->
 	///

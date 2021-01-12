@@ -1,4 +1,4 @@
-﻿namespace BricksBucket.Core
+﻿namespace Monogum.BricksBucket.Core
 {
     /* LOGS BUCKET */
     public static partial class Bucket

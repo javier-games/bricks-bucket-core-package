@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BricksBucket.Core.Generic
+namespace Monogum.BricksBucket.Core.Generics
 {
     /// <summary>
     /// Dynamic reference to component properties.

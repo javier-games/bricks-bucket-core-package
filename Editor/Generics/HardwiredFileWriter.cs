@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace BricksBucket.Core.Generic.Editor
+namespace Monogum.BricksBucket.Core.Generics.Editor
 {
     /// <!-- HardwiredFileWriter -->
     /// <summary>
@@ -19,7 +19,7 @@ namespace BricksBucket.Core.Generic.Editor
         /// Original Bricks Bucket Namespace.
         /// </summary>
         private const string BricksBucketNameSpace =
-            "BricksBucket.Core.Generic";
+            "BricksBucket.Core.Generics";
 
         /// <summary>
         /// Writer for AbstractComponentRegistry.cs
@@ -490,8 +490,8 @@ namespace {NEW_NAMESPACE}
         /// <summary>
         /// Template for an element in a list of types.
         /// </summary>
-        private const string TypeElement = 
-@"            typeof({0})";
+        private const string TypeElement = @"
+            typeof({0})";
         
         /// <summary>
         /// Template for a region on a actions dictionary.

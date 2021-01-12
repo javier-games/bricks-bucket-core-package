@@ -7,7 +7,7 @@ using UnityEngine;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable CollectionNeverUpdated.Global
 
-namespace BricksBucket.Core.Generic
+namespace Monogum.BricksBucket.Core.Generics
 {
 	/// <!-- AbstractComponentRegistry -->
 	/// <summary>

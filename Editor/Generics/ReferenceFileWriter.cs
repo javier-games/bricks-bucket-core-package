@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace BricksBucket.Core.Generic.Editor
+namespace Monogum.BricksBucket.Core.Generics.Editor
 {
     /// <!-- HardwiredFileWriter -->
     /// <summary>

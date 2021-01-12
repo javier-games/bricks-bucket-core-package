@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BricksBucket.Core
+namespace Monogum.BricksBucket.Core
 {
 	/// <!-- UiExtensions -->
 	///

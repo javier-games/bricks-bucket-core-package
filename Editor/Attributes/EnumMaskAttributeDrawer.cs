@@ -1,9 +1,9 @@
 ﻿using System;
-using BricksBucket.Core.Attributes;
+using Monogum.BricksBucket.Core.Attributes;
 using UnityEditor;
 using UnityEngine;
 
-namespace BricksBucket.Core.Editor.Attributes
+namespace Monogum.BricksBucket.Core.Editor.Attributes
 {
     /// <!-- EnumMaskAttributeDrawer -->
     ///

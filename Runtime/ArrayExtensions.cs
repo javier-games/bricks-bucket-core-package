@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Array = System.Array;
 using Random = UnityEngine.Random;
 
-namespace BricksBucket.Core
+namespace Monogum.BricksBucket.Core
 {
     /// <!-- ArrayExtensions -->
     /// 

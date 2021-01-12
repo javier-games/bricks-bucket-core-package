@@ -1,4 +1,4 @@
-namespace BricksBucket.Core.Generic
+namespace Monogum.BricksBucket.Core.Generics
 {
     /// <!-- IVariable -->
     /// <summary>

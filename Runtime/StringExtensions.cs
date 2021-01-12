@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using UnityEngine;
 
-namespace BricksBucket.Core
+namespace Monogum.BricksBucket.Core
 {
 	/// <!-- StringExtensions -->
 	///

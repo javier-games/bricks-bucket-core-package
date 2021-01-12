@@ -4,7 +4,7 @@ namespace BricksBucket.Core.Generic
     /// <summary>
     /// Enumeration of possible data types.
     /// </summary>
-    public enum DataType {
+    public enum DynamicValueType {
         /// <summary>
         /// Null value.
         /// </summary>

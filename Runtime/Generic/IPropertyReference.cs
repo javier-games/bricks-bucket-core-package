@@ -1,4 +1,5 @@
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace BricksBucket.Core.Generic
 {
@@ -6,13 +7,13 @@ namespace BricksBucket.Core.Generic
     /// <summary>
     /// Interface for a dynamic reference.
     /// </summary>
-    public interface IReference
+    public interface IPropertyReference
     {
         /// <summary>
         /// Reference to the instance object.
         /// </summary>
         /// <returns>A reference.</returns>
-        Object Component { get; }
+        Component Component { get; }
         
         /// <summary>
         /// Name of the property of the component.
@@ -21,27 +22,21 @@ namespace BricksBucket.Core.Generic
         string Property { get; }
         
         /// <summary>
-        /// Value of the property.
-        /// </summary>
-        /// <returns>Null if has not been assigned.</returns>
-        IVariable Variable { get; }
-        
-        /// <summary>
         /// Instance of hardwired class.
         /// </summary>>
         /// <returns>Null if has not been assigned.</returns>
-        IHardwiredRegistry Hardwired { get; }
+        IComponentRegistry ComponentRegistry { get; }
 
         /// <summary>
         /// Set the object reference.
         /// </summary>
         /// <param name="reference">New reference.</param>
-        void SetReference(Object reference);
+        void SetComponent(Component reference);
 
         /// <summary>
         /// Sets the property.
         /// </summary>
-        void SetProperty(string propertyName);
+        void SetProperty(string property);
 
         /// <summary>
         /// Gets the value of the variable.
@@ -51,6 +46,6 @@ namespace BricksBucket.Core.Generic
         /// <summary>
         /// Sets the value of the property.
         /// </summary>
-        void SetValue(object propertyValue);
+        void SetValue(object value);
     }
 }

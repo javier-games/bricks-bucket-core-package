@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 
 namespace BricksBucket.Core.Generic.Editor
-{
+{/*
     /// <!-- AbstractReferenceDrawer -->
     /// <summary>
     /// Drawer for the Variable Class.
@@ -157,7 +157,7 @@ namespace BricksBucket.Core.Generic.Editor
             {
                 var objectValue = _dynRef.Component;
                 var type = objectValue.GetType();
-                if (!_dynRef.Hardwired.ContainsComponent(type.ToString()))
+                if (!_dynRef.ComponentRegistry.ContainsComponent(objectValue as Component))
                 {
                     var rectMessage = position;
                     rectMessage.width = EditorGUIUtility.labelWidth;
@@ -192,7 +192,7 @@ namespace BricksBucket.Core.Generic.Editor
                     {
                         HardwiredFileWriter.RegisterType(
                             _dynRef.Component.GetType(),
-                            _dynRef.Hardwired
+                            _dynRef.ComponentRegistry
                         );
                     }
 
@@ -445,5 +445,5 @@ namespace BricksBucket.Core.Generic.Editor
         }
 
         #endregion
-    }
+    }*/
 }

@@ -1,31 +1,20 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace BricksBucket.Core.Generic
 {
-    /// <!-- IHardwiredRegistry -->
+    /// <!-- IComponentRegistry -->
     /// <summary>
     /// Interface for a hardwired registry of properties.
     /// </summary>
-    public interface IHardwiredRegistry
+    public interface IComponentRegistry
     {
         /// <summary>
-        /// Path of the hardwired script inheritor.
+        /// Returns the collection of all registered types.
         /// </summary>
-        /// <returns>Empty if has not inheritor.</returns>
-        string Path { get; }
-        
-        /// <summary>
-        /// Namespace of the hardwired script inheritor.
-        /// </summary>
-        /// <returns>Empty if has not inheritor.</returns>
-        string NameSpace { get; }
-
-        /// <summary>
-        /// Returns the array of all registered types.
-        /// </summary>
-        /// <value>The array.</value>
-        IEnumerable<Type> Array { get; }
+        /// <value>The enumerable collection of elements.</value>
+        IEnumerable<Type> ComponentTypes { get; }
         
         /// <summary>
         /// Whether the list of registered types contains the given component.
@@ -33,7 +22,7 @@ namespace BricksBucket.Core.Generic
         /// <returns><value>TRUE</value>, if the component is contained.
         /// </returns>
         /// <param name="component">Component to look for.</param>
-        bool ContainsComponent(string component);
+        bool ContainsComponent(Component component);
         
         /// <summary>
         /// Whether the list of registered types contains the given property
@@ -43,7 +32,7 @@ namespace BricksBucket.Core.Generic
         /// <param name="component">Component of the property to look for.
         /// </param>
         /// <param name="property">Property to look for.</param>
-        bool ContainsProperty(string component, string property);
+        bool ContainsProperty(Component component, string property);
         
         /// <summary>
         /// Gets the value of the property.
@@ -51,7 +40,7 @@ namespace BricksBucket.Core.Generic
         /// <param name="component">Component of the property.</param>
         /// <param name="property">Property name.</param>
         /// <returns>The value.</returns>
-        object GetValue(object component, string property);
+        object GetValue(Component component, string property);
 
         /// <summary>
         /// Sets the value of the given property of the given component.
@@ -59,6 +48,6 @@ namespace BricksBucket.Core.Generic
         /// <param name="component">Component of the property.</param>
         /// <param name="property">Property name.</param>
         /// <param name="value">Value.</param>
-        void SetValue(object component, string property, object value);
+        void SetValue(Component component, string property, object value);
     }
 }

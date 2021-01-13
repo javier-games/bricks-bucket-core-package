@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BricksBucket.Core
+namespace Monogum.BricksBucket.Core
 {
     /// <!-- TransformExtensions -->
     ///

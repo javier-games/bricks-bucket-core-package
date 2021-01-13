@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace BricksBucket.Core
+namespace Monogum.BricksBucket.Core
 {
     /* COROUTINES BUCKET */
     public static partial class Bucket

@@ -1,7 +1,7 @@
 using UnityEngine;
-using BricksBucket.Core.Math;
+using Monogum.BricksBucket.Core.Math;
 
-namespace BricksBucket.Core
+namespace Monogum.BricksBucket.Core
 {
     /// <!-- IntegerExtensions -->
     ///

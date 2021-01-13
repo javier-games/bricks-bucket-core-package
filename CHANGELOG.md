@@ -7,11 +7,21 @@
 - Pooling System working with nested prefabs.
 - Define symbols manager system.
 
+
+## `1.0.1` - January 13th, 2020
+### Added
+- Generics example.
+### Fixed
+- Fixed namespace.
+- Removed unused test folder.
+
+
 ## `1.0.0` - December 18th, 2020
 ### Added
 - Dynamic References and Variables.
 ### Changed
 - Assembly name.
+
 
 ## `0.0.1` - July 6th, 2020
 ### Added
@@ -19,6 +29,7 @@
 ### Changed
 - Licence file extension.
 - Package structure.
+
 
 ## `0.0.0` - July 5th, 2020
 ### Added

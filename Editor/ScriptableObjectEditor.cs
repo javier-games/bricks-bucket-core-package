@@ -1,9 +1,9 @@
-using BricksBucket.Core.Attributes;
-using BricksBucket.Core.Editor.Attributes;
+using Monogum.BricksBucket.Core.Attributes;
+using Monogum.BricksBucket.Core.Editor.Attributes;
 using UnityEditor;
 using UnityEngine;
 
-namespace BricksBucket.Core.Editor
+namespace Monogum.BricksBucket.Core.Editor
 {
 	// ReSharper disable CommentTypo
 	/// <!-- ScriptableObjectEditor -->

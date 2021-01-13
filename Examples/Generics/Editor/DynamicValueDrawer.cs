@@ -2,13 +2,13 @@
 using UnityEditor;
 using Object = UnityEngine.Object;
 
-namespace BricksBucket.Core.Generic.Editor
+namespace Monogum.BricksBucket.Core.Examples.Generics.Editor
 {
 
     /// <summary>
     /// Drawer for the Variable Class.
     /// </summary>
-    [CustomPropertyDrawer(typeof(Variable))]
+    [CustomPropertyDrawer(typeof(DynamicValue))]
     public class VariableDrawer : PropertyDrawer
     {
 
@@ -22,7 +22,7 @@ namespace BricksBucket.Core.Generic.Editor
         /// <summary>
         /// References of a dynamic variable.
         /// </summary>
-        private readonly Variable _variable = new Variable();
+        private readonly DynamicValue _dynamicValue = new DynamicValue();
 
         /// <summary>
         /// Whether to apply extra space because a vector type.
@@ -91,100 +91,100 @@ namespace BricksBucket.Core.Generic.Editor
             EditorGUI.indentLevel = indent;
 
             //  Getting the properties references.
-            _variable.Type = (DataType) property.FindPropertyRelative("type")
+            _dynamicValue.Type = (DynamicValueType) property.FindPropertyRelative("type")
                 .enumValueIndex;
-            _variable.Vector4 =
+            _dynamicValue.Vector4 =
                 property.FindPropertyRelative("vector").vector4Value;
-            _variable.Asset = property.FindPropertyRelative("asset")
+            _dynamicValue.Asset = property.FindPropertyRelative("asset")
                 .objectReferenceValue;
-            _variable.Curve = property.FindPropertyRelative("curve")
+            _dynamicValue.Curve = property.FindPropertyRelative("curve")
                 .animationCurveValue;
-            _variable.String =
+            _dynamicValue.String =
                 property.FindPropertyRelative("stringValue").stringValue;
 
             //  Draw properties.
-            _variable.Type =
-                (DataType) EditorGUI.EnumPopup(rectType, "Variable",
-                    _variable.Type);
-            switch (_variable.Type)
+            _dynamicValue.Type =
+                (DynamicValueType) EditorGUI.EnumPopup(rectType, "Variable",
+                    _dynamicValue.Type);
+            switch (_dynamicValue.Type)
             {
 
-                case DataType.NULL:
+                case DynamicValueType.NULL:
                     EditorGUI.LabelField(rectValue, Text + " null");
                     break;
 
-                case DataType.BOOLEAN:
-                    _variable.Boolean =
-                        EditorGUI.Toggle(rectValue, Text, _variable.Boolean);
+                case DynamicValueType.BOOLEAN:
+                    _dynamicValue.Boolean =
+                        EditorGUI.Toggle(rectValue, Text, _dynamicValue.Boolean);
                     break;
 
-                case DataType.INTEGER:
-                    _variable.Integer =
+                case DynamicValueType.INTEGER:
+                    _dynamicValue.Integer =
                         EditorGUI.IntField(rectValue, Text,
-                            _variable.Integer);
+                            _dynamicValue.Integer);
                     break;
 
-                case DataType.FLOAT:
-                    _variable.Float =
+                case DynamicValueType.FLOAT:
+                    _dynamicValue.Float =
                         EditorGUI.FloatField(rectValue, Text,
-                            _variable.Float);
+                            _dynamicValue.Float);
                     break;
 
-                case DataType.DOUBLE:
-                    _variable.Double =
+                case DynamicValueType.DOUBLE:
+                    _dynamicValue.Double =
                         EditorGUI.DoubleField(rectValue, Text,
-                            _variable.Double);
+                            _dynamicValue.Double);
                     break;
 
-                case DataType.VECTOR2:
-                    _variable.Vector2 =
+                case DynamicValueType.VECTOR2:
+                    _dynamicValue.Vector2 =
                         EditorGUI.Vector2Field(rectValue, Text,
-                            _variable.Vector2);
+                            _dynamicValue.Vector2);
                     break;
 
-                case DataType.VECTOR3:
-                    _variable.Vector3 =
+                case DynamicValueType.VECTOR3:
+                    _dynamicValue.Vector3 =
                         EditorGUI.Vector3Field(rectValue, Text,
-                            _variable.Vector3);
+                            _dynamicValue.Vector3);
                     break;
 
-                case DataType.VECTOR4:
-                    _variable.Vector4 =
+                case DynamicValueType.VECTOR4:
+                    _dynamicValue.Vector4 =
                         EditorGUI.Vector4Field(rectValue, Text,
-                            _variable.Vector4);
+                            _dynamicValue.Vector4);
                     break;
 
-                case DataType.QUATERNION:
-                    _variable.Vector4 =
+                case DynamicValueType.QUATERNION:
+                    _dynamicValue.Vector4 =
                         EditorGUI.Vector4Field(rectValue, Text,
-                            _variable.Vector4);
+                            _dynamicValue.Vector4);
                     break;
 
-                case DataType.COLOR:
-                    _variable.Color =
+                case DynamicValueType.COLOR:
+                    _dynamicValue.Color =
                         EditorGUI.ColorField(rectValue, Text,
-                            _variable.Color);
+                            _dynamicValue.Color);
                     break;
 
-                case DataType.STRING:
-                    _variable.String =
+                case DynamicValueType.STRING:
+                    _dynamicValue.String =
                         EditorGUI.TextField(rectValue, Text,
-                            _variable.String);
+                            _dynamicValue.String);
                     break;
 
-                case DataType.CURVE:
-                    _variable.Curve =
+                case DynamicValueType.CURVE:
+                    _dynamicValue.Curve =
                         EditorGUI.CurveField(rectValue, Text,
-                            _variable.Curve);
+                            _dynamicValue.Curve);
                     break;
 
-                case DataType.ASSET:
-                    _variable.Asset = EditorGUI.ObjectField(
+                case DynamicValueType.ASSET:
+                    _dynamicValue.Asset = EditorGUI.ObjectField(
                         rectValue,
                         Text,
-                        _variable.Asset,
-                        _variable.Asset != null
-                            ? _variable.Asset.GetType()
+                        _dynamicValue.Asset,
+                        _dynamicValue.Asset != null
+                            ? _dynamicValue.Asset.GetType()
                             : typeof(Object),
                         true
                     );
@@ -195,15 +195,15 @@ namespace BricksBucket.Core.Generic.Editor
 
             //  Update properties values..
             property.FindPropertyRelative("stringValue").stringValue =
-                _variable.String;
+                _dynamicValue.String;
             property.FindPropertyRelative("curve").animationCurveValue =
-                _variable.Curve;
+                _dynamicValue.Curve;
             property.FindPropertyRelative("object").objectReferenceValue =
-                _variable.Asset;
+                _dynamicValue.Asset;
             property.FindPropertyRelative("vector").vector4Value =
-                _variable.Vector4;
+                _dynamicValue.Vector4;
             property.FindPropertyRelative("type").enumValueIndex =
-                (int) _variable.Type;
+                (int) _dynamicValue.Type;
 
         }
 

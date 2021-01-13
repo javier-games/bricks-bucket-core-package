@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace BricksBucket.Core
+namespace Monogum.BricksBucket.Core
 {
     /// <!-- ListExtensions -->
     /// 

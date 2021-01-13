@@ -2,7 +2,7 @@ using UnityEngine;
 
 using Enum = System.Enum;
 
-namespace BricksBucket.Core
+namespace Monogum.BricksBucket.Core
 {
 	/// <!-- IntegerExtensions -->
 	///

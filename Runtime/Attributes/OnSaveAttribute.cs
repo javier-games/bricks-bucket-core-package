@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace BricksBucket.Core.Attributes
+namespace Monogum.BricksBucket.Core.Attributes
 {
     /// <!-- OnSaveAttribute -->
     /// 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace BricksBucket.Core.Collections
+namespace Monogum.BricksBucket.Core.Collections
 {
     /// <!-- SerializableQueue -->
     /// 

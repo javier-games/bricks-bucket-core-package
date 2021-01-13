@@ -1,6 +1,6 @@
 using System;
 
-namespace BricksBucket.Core.Editor
+namespace Monogum.BricksBucket.Core.Editor
 {
     /// <!-- ReflectionExtensions -->
     /// 

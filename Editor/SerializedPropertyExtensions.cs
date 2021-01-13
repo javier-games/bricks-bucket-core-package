@@ -5,7 +5,7 @@ using UnityEditor;
 
 using Object = UnityEngine.Object;
 
-namespace BricksBucket.Core.Editor
+namespace Monogum.BricksBucket.Core.Editor
 {
     public static class SerializedPropertyExtensions
     {

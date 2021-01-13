@@ -2,7 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BricksBucket.Core
+namespace Monogum.BricksBucket.Core
 {
     /// <!-- EnumerableExtensions -->
     /// 

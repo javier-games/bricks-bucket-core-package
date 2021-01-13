@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace BricksBucket.Core.Editor
+namespace Monogum.BricksBucket.Core.Editor
 {
     /* REFLECTION BUCKET */
 	public static partial class BucketEditor

@@ -1,17 +1,11 @@
-namespace BricksBucket.Core.Generic
+namespace Monogum.BricksBucket.Core.Generics
 {
     /// <!-- IVariable -->
     /// <summary>
     /// Interface for dynamic type variable.
     /// </summary>
-    public interface IVariable
+    public interface IValue
     {
-        /// <summary>
-        /// Type of variable.
-        /// </summary>
-        /// <returns>Type of the variable.</returns>
-        DataType Type { get; }
-
         /// <summary>
         /// Returns this variable to an object of desired type.
         /// </summary>

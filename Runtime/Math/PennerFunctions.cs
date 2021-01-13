@@ -1,6 +1,6 @@
 ﻿using MathD = System.Math;
 
-namespace BricksBucket.Core.Math
+namespace Monogum.BricksBucket.Core.Math
 {
     // ReSharper disable CommentTypo
     /// <!-- PennerFunctions -->

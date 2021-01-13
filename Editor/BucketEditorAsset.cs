@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace BricksBucket.Core.Editor
+namespace Monogum.BricksBucket.Core.Editor
 {
     /* ASSET BUCKET */
     public static partial class BucketEditor

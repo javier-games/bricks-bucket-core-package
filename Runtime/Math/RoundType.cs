@@ -1,4 +1,4 @@
-﻿namespace BricksBucket.Core.Math 
+﻿namespace Monogum.BricksBucket.Core.Math 
 {
     /// <!-- RoundType -->
     /// 

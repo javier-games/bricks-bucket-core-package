@@ -1,10 +1,10 @@
-namespace BricksBucket.Core.Generic
+namespace Monogum.BricksBucket.Core.Examples.Generics
 {
     /// <!-- DataType -->
     /// <summary>
     /// Enumeration of possible data types.
     /// </summary>
-    public enum DataType {
+    public enum DynamicValueType {
         /// <summary>
         /// Null value.
         /// </summary>

@@ -1,14 +1,13 @@
-using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace BricksBucket.Core.Generic.Editor
+namespace Monogum.BricksBucket.Core.Generics.Editor
 {
-    /// <!-- DynamicValuesWizard -->
+    /// <!-- HardwiredWizard -->
     /// <summary>
     /// Displays a Wizard window to set up the hardwired scripts.
     /// </summary>
-    public class DynamicValuesWizard : ScriptableWizard
+    public class HardwiredWizard : ScriptableWizard
     {
         #region Fields
         
@@ -16,21 +15,29 @@ namespace BricksBucket.Core.Generic.Editor
         /// Local path where to put the scripts.
         /// </summary>
         [SerializeField]
-        [Tooltip("Local path where to put the scripts.")]
+        [Tooltip("Local path where to put the scripts with out assets folder.")]
         private string path = "";
-        
-        /// <summary>
-        /// Name of the folder container.
-        /// </summary>
-        [SerializeField]
-        [Tooltip("Name of the folder container")]
-        private string folderName = "Custom Values";
 
         /// <summary>
         /// Name space where to put the scripts.
         /// </summary>
         [SerializeField]
-        private string nameSpace = "MyNameSpace";
+        [Tooltip("Namespace of the class.")]
+        private string nameSpace = "";
+
+        /// <summary>
+        /// Name of the hardwired class.
+        /// </summary>
+        [SerializeField]
+        [Tooltip("Name of the hardwired class.")]
+        private string className = "";
+
+        /// <summary>
+        /// Name space where to put the scripts.
+        /// </summary>
+        [SerializeField]
+        [Tooltip("Extension of the file, with out the point.")]
+        private string extension = "";
 
         #endregion
 
@@ -39,11 +46,11 @@ namespace BricksBucket.Core.Generic.Editor
         /// <summary>
         /// Creates a Custom Dynamic Environment.
         /// </summary>
-        [MenuItem("Tools/BricksBucket/Create Custom Dynamic Values")]
+        [MenuItem("Tools/BricksBucket/ComponentRegistry/Create Collection")]
         public static void CreateWizard()
         {
-            DisplayWizard<DynamicValuesWizard>(
-                "Create Custom Dynamic Values",
+            DisplayWizard<HardwiredWizard>(
+                "Create ComponentRegistry Component Collection",
                 "Create",
                 "Cancel"
             );
@@ -54,15 +61,20 @@ namespace BricksBucket.Core.Generic.Editor
         /// </summary>
         public void OnWizardCreate()
         {
-            HardwiredFileWriter.CreateClasses(path + folderName, nameSpace);
+            HardwiredFileWriter.ResetFile(
+                path,
+                extension,
+                nameSpace,
+                className
+            );
         }
 
         /// <summary>
         /// Called when the second option is pressed.
         /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
         public void OnWizardOtherButton()
         {
+            // ReSharper disable once RedundantJumpStatement
             return;
         }
 

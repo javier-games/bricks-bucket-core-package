@@ -1,6 +1,6 @@
 using System;
 
-namespace BricksBucket.Core
+namespace Monogum.BricksBucket.Core
 {
     /* INTERNAL BUCKET */
     public static partial class Bucket

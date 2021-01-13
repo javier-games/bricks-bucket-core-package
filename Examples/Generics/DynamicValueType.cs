@@ -1,4 +1,4 @@
-namespace BricksBucket.Core.Generic
+namespace Monogum.BricksBucket.Core.Examples.Generics
 {
     /// <!-- DataType -->
     /// <summary>

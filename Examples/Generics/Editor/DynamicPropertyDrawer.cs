@@ -1,18 +1,16 @@
 ﻿using System.Reflection;
 using System.Collections.Generic;
-using Monogum.BricksBucket.Core.Editor;
+using Monogum.BricksBucket.Core.Examples.Generics;
 using UnityEngine;
 using UnityEditor;
 
 namespace Monogum.BricksBucket.Core.Generics.Editor
-{/*
+{
     /// <!-- AbstractReferenceDrawer -->
     /// <summary>
     /// Drawer for the Variable Class.
     /// </summary>
-    /// <typeparam name="T">Type variable of reference inheritor.</typeparam>
-    public abstract class AbstractReferenceDrawer<T> : PropertyDrawer
-        where T : IReference, new()
+    public abstract class DynamicPropertyDrawer : PropertyDrawer
     {
 
         #region Fields
@@ -25,7 +23,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
         /// <summary>
         /// References of a dynamic variable.
         /// </summary>
-        private readonly T _dynRef = new T();
+        private readonly DynamicProperty _dynRef = new DynamicProperty();
 
         /// <summary>
         /// List that the stores the properties and components.
@@ -60,8 +58,8 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
 
              //  Getting the properties references.
             var dynProperty = property.FindPropertyRelative("value");
-            _dynRef.SetReference(property.FindPropertyRelative("component")
-                .objectReferenceValue);
+            _dynRef.SetComponent(property.FindPropertyRelative("component")
+                .objectReferenceValue as Component);
             _dynRef.SetProperty(property.FindPropertyRelative("property")
                 .stringValue);
 
@@ -85,7 +83,8 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                     {
                         if (!(_objectReferenceAttempt is GameObject))
                         {
-                            _dynRef.SetReference(_objectReferenceAttempt);
+                            _dynRef.SetComponent(
+                                _objectReferenceAttempt as Component);
                             _objectReferenceAttempt = null;
                         }
                     }
@@ -123,7 +122,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                         // Delete option.
                         if (compIndex == _dropdown.Count - 1)
                         {
-                            _dynRef.SetReference(null);
+                            _dynRef.SetComponent(null);
                             _objectReferenceAttempt = null;
                             StoreData(property, dynProperty);
                             return;
@@ -132,7 +131,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                         // Select GameObject
                         if (compIndex == 1)
                         {
-                            _dynRef.SetReference(_objectReferenceAttempt);
+                            _dynRef.SetComponent(_objectReferenceAttempt as Component);
                             _objectReferenceAttempt = null;
                             StoreData(property, dynProperty);
                             return;
@@ -141,7 +140,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                         // Component Selected
                         if (compIndex != 0 && _components != null)
                         {
-                            _dynRef.SetReference(_components[compIndex - 2]);
+                            _dynRef.SetComponent(_components[compIndex - 2]);
                             _objectReferenceAttempt = null;
                             StoreData(property, dynProperty);
                             return;
@@ -183,7 +182,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                     GUI.Button(rectButtonCancel, "Cancel");
                     if (EditorGUI.EndChangeCheck())
                     {
-                        _dynRef.SetReference(null);
+                        _dynRef.SetComponent(null);
                     }
 
                     EditorGUI.BeginChangeCheck();
@@ -192,6 +191,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                     {
                         HardwiredFileWriter.RegisterType(
                             _dynRef.Component.GetType(),
+                            _dynRef.ScriptData,
                             _dynRef.ComponentRegistry
                         );
                     }
@@ -255,145 +255,142 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
 
 
 
-                _dynRef.SetReference(EditorGUI.ObjectField(
+                _dynRef.SetComponent(EditorGUI.ObjectField(
                     position: rectObject,
                     obj: _dynRef.Component,
                     objType: _dynRef.Component != null
                         ? _dynRef.Component.GetType()
                         : typeof(Object),
                     allowSceneObjects: true
-                ));
+                ) as Component);
 
                 propIndex = EditorGUI.Popup(rectProperty, propIndex,
                     _dropdown.ToArray());
                 
-
-                
-
                 if (propIndex != 0)
                 {
                     _dynRef.SetProperty(_dropdown[propIndex]);
 
-                    switch (_dynRef.Variable.Type)
+                    switch (_dynRef.Value.Type)
                     {
 
-                        case DataType.NULL:
+                        case DynamicValueType.NULL:
                             EditorGUI.LabelField(rectValue, "Null");
                             break;
 
-                        case DataType.BOOLEAN:
+                        case DynamicValueType.BOOLEAN:
                             _dynRef.SetValue(
                                 EditorGUI.Toggle(
                                     rectValue,
-                                    (bool) _dynRef.Variable.Get(typeof(bool))
+                                    (bool) _dynRef.Value.Get(typeof(bool))
                                 )
                             );
                             break;
 
-                        case DataType.INTEGER:
+                        case DynamicValueType.INTEGER:
                             _dynRef.SetValue(
                                 EditorGUI.IntField(
                                     rectValue,
-                                    (int) _dynRef.Variable.Get(typeof(int))
+                                    (int) _dynRef.Value.Get(typeof(int))
                                 )
                             );
                             break;
 
-                        case DataType.FLOAT:
+                        case DynamicValueType.FLOAT:
                             _dynRef.SetValue(
                                 EditorGUI.FloatField(
                                     rectValue,
-                                    (float) _dynRef.Variable.Get(typeof(float))
+                                    (float) _dynRef.Value.Get(typeof(float))
                                 )
                             );
                             break;
 
-                        case DataType.DOUBLE:
+                        case DynamicValueType.DOUBLE:
                             _dynRef.SetValue(
                                 EditorGUI.DoubleField(
                                     rectValue,
-                                    (double) _dynRef.Variable.Get(
+                                    (double) _dynRef.Value.Get(
                                         typeof(double))
                                 )
                             );
                             break;
 
-                        case DataType.VECTOR2:
+                        case DynamicValueType.VECTOR2:
                             _dynRef.SetValue(
                                 EditorGUI.Vector2Field(
                                     rectValue,
                                     GUIContent.none, 
-                                    (Vector2) _dynRef.Variable.Get(
+                                    (Vector2) _dynRef.Value.Get(
                                         typeof(Vector2))
                                 )
                             );
                             break;
 
-                        case DataType.VECTOR3:
+                        case DynamicValueType.VECTOR3:
                             _dynRef.SetValue(
                                 EditorGUI.Vector3Field(
                                     rectValue,
                                     GUIContent.none,
-                                    (Vector3) _dynRef.Variable.Get(
+                                    (Vector3) _dynRef.Value.Get(
                                         typeof(Vector3))
                                 )
                             );
                             break;
 
-                        case DataType.VECTOR4:
+                        case DynamicValueType.VECTOR4:
                             _dynRef.SetValue(
                                 EditorGUI.Vector4Field(
                                     rectValue,
                                     GUIContent.none,
-                                    (Vector4) _dynRef.Variable.Get(
+                                    (Vector4) _dynRef.Value.Get(
                                         typeof(Vector4))
                                 )
                             );
                             break;
 
-                        case DataType.QUATERNION:
+                        case DynamicValueType.QUATERNION:
                             var aux = EditorGUI.Vector4Field(
                                 rectValue,
                                 GUIContent.none,
-                                (Vector4) _dynRef.Variable.Get(typeof(Vector4))
+                                (Vector4) _dynRef.Value.Get(typeof(Vector4))
                             );
                             _dynRef.SetValue(
                                 new Quaternion(aux.x, aux.y, aux.z, aux.w)
                             );
                             break;
 
-                        case DataType.COLOR:
+                        case DynamicValueType.COLOR:
                             _dynRef.SetValue(
                                 EditorGUI.ColorField(
                                     rectValue,
-                                    (Color) _dynRef.Variable.Get(typeof(Color))
+                                    (Color) _dynRef.Value.Get(typeof(Color))
                                 )
                             );
                             break;
 
-                        case DataType.STRING:
+                        case DynamicValueType.STRING:
                             _dynRef.SetValue(
                                 EditorGUI.TextField(
                                     rectValue,
-                                    (string) _dynRef.Variable.Get(
+                                    (string) _dynRef.Value.Get(
                                         typeof(string))
                                 )
                             );
                             break;
 
-                        case DataType.CURVE:
+                        case DynamicValueType.CURVE:
                             _dynRef.SetValue(
                                 EditorGUI.CurveField(
                                     rectValue,
-                                    _dynRef.Variable.Get(
+                                    _dynRef.Value.Get(
                                         typeof(AnimationCurve)
                                     ) as AnimationCurve
                                 )
                             );
                             break;
 
-                        case DataType.ASSET:
-                            var component = _dynRef.Variable.Get(
+                        case DynamicValueType.ASSET:
+                            var component = _dynRef.Value.Get(
                                 typeof(Object)
                             ) as Object;
                             _dynRef.SetValue(EditorGUI.ObjectField(
@@ -433,17 +430,17 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
             property.FindPropertyRelative("property").stringValue =
                 _dynRef.Property;
             dynProperty.FindPropertyRelative("stringValue").stringValue =
-                (string) _dynRef.Variable.Get(typeof(string));
+                (string) _dynRef.Value.Get(typeof(string));
             dynProperty.FindPropertyRelative("curve").animationCurveValue =
-                _dynRef.Variable.Get(typeof(AnimationCurve)) as AnimationCurve;
+                _dynRef.Value.Get(typeof(AnimationCurve)) as AnimationCurve;
             dynProperty.FindPropertyRelative("asset").objectReferenceValue =
-                _dynRef.Variable.Get(typeof(Object)) as Object;
+                _dynRef.Value.Get(typeof(Object)) as Object;
             dynProperty.FindPropertyRelative("vector").vector4Value =
-                (Vector4) _dynRef.Variable.Get(typeof(Vector4));
+                (Vector4) _dynRef.Value.Get(typeof(Vector4));
             dynProperty.FindPropertyRelative("type").enumValueIndex =
-                (int) _dynRef.Variable.Type;
+                (int) _dynRef.Value.Type;
         }
 
         #endregion
-    }*/
+    }
 }

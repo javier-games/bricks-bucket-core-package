@@ -2,18 +2,21 @@
 using System.Globalization;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using Monogum.BricksBucket.Core.Generics;
 
-namespace BricksBucket.Core.Generic {
+namespace Monogum.BricksBucket.Core.Examples.Generics
+{
 
     /// <!-- Variable -->
     /// <summary>
     /// Dynamic variable that stores different types of data.
     /// </summary>
     [Serializable]
-    public class DynamicValue : AbstractValue {
-        
+    public class DynamicValue : AbstractValue
+    {
+
         #region Class Members
-        
+
         /// <summary>
         /// Hashcode of this instance.
         /// </summary>
@@ -41,7 +44,7 @@ namespace BricksBucket.Core.Generic {
         /// Animation curve value.
         /// </summary>
         [SerializeField]
-        protected AnimationCurve curve = new AnimationCurve ();
+        protected AnimationCurve curve = new AnimationCurve();
 
         /// <summary>
         /// Stores the type of variable.
@@ -50,24 +53,29 @@ namespace BricksBucket.Core.Generic {
         protected DynamicValueType type;
 
         #endregion
-        
+
+
         #region Accesors
 
         /// <summary>
         /// Type of variable.
         /// </summary>
         /// <returns>Type of the variable.</returns>
-        public DynamicValueType Type {
+        public DynamicValueType Type
+        {
             get => type;
-            set {
-                if (value != type) {
+            set
+            {
+                if (value != type)
+                {
                     vector = Vector4.zero;
                     stringValue = string.Empty;
                     asset = null;
                     if (curve != null)
                         for (var i = 0; i < curve.keys.Length; i++)
-                            curve.RemoveKey (i);
+                            curve.RemoveKey(i);
                 }
+
                 type = value;
             }
         }
@@ -76,7 +84,8 @@ namespace BricksBucket.Core.Generic {
         /// Boolean value of the variable.
         /// </summary>
         /// <returns>Value of the variable.</returns>
-        public bool Boolean {
+        public bool Boolean
+        {
             get => (vector.x > 0 || vector.x < 0);
             set => vector.x = value ? 1 : 0;
         }
@@ -85,8 +94,9 @@ namespace BricksBucket.Core.Generic {
         /// Integer value of the variable.
         /// </summary>
         /// <returns>Value of the variable.</returns>
-        public int Integer {
-            get => (int)vector.x;
+        public int Integer
+        {
+            get => (int) vector.x;
             set => vector.x = value;
         }
 
@@ -94,7 +104,8 @@ namespace BricksBucket.Core.Generic {
         /// Float value of the variable.
         /// </summary>
         /// <returns>Value of the variable.</returns>
-        public float Float {
+        public float Float
+        {
             get => vector.x;
             set => vector.x = value;
         }
@@ -103,16 +114,18 @@ namespace BricksBucket.Core.Generic {
         /// Double value of the variable.
         /// </summary>
         /// <returns>Value of the variable.</returns>
-        public double Double {
+        public double Double
+        {
             get => vector.x;
-            set => vector.x = (float)value;
+            set => vector.x = (float) value;
         }
 
         /// <summary>
         /// Vector2 value of the variable.
         /// </summary>
         /// <returns>Value of the variable.</returns>
-        public Vector2 Vector2 {
+        public Vector2 Vector2
+        {
             get => vector;
             set => vector = value;
         }
@@ -121,7 +134,8 @@ namespace BricksBucket.Core.Generic {
         /// Vector3 value of the variable.
         /// </summary>
         /// <returns>Value of the variable.</returns>
-        public Vector3 Vector3 {
+        public Vector3 Vector3
+        {
             get => vector;
             set => vector = value;
         }
@@ -130,7 +144,8 @@ namespace BricksBucket.Core.Generic {
         /// Vector4 value of the variable.
         /// </summary>
         /// <returns>Value of the variable.</returns>
-        public Vector4 Vector4 {
+        public Vector4 Vector4
+        {
             get => vector;
             set => vector = value;
         }
@@ -139,7 +154,8 @@ namespace BricksBucket.Core.Generic {
         /// Color value of the variable.
         /// </summary>
         /// <returns>Value of the variable.</returns>
-        public Color Color {
+        public Color Color
+        {
             get => vector;
             set => vector = value;
         }
@@ -148,21 +164,23 @@ namespace BricksBucket.Core.Generic {
         /// Quaternion value of the variable.
         /// </summary>
         /// <returns>Value of the variable.</returns>
-        public Quaternion Quaternion {
-            get => new Quaternion (
+        public Quaternion Quaternion
+        {
+            get => new Quaternion(
                 vector.x,
                 vector.y,
                 vector.z,
                 vector.w
             );
-            set => vector = new Vector4 (value.x, value.y, value.z, value.w);
+            set => vector = new Vector4(value.x, value.y, value.z, value.w);
         }
 
         /// <summary>
         /// String value of the variable.
         /// </summary>
         /// <returns>Value of the variable.</returns>
-        public string String {
+        public string String
+        {
             get => stringValue;
             set => stringValue = value;
         }
@@ -171,7 +189,8 @@ namespace BricksBucket.Core.Generic {
         /// Object value of the variable.
         /// </summary>
         /// <returns>Value of the variable.</returns>
-        public Object Asset {
+        public Object Asset
+        {
             get => asset;
             set => asset = value;
         }
@@ -180,17 +199,11 @@ namespace BricksBucket.Core.Generic {
         /// Animation Curve value of the variable.
         /// </summary>
         /// <returns>Value of the variable.</returns>
-        public AnimationCurve Curve {
+        public AnimationCurve Curve
+        {
             get => curve;
             set => curve = value;
         }
-
-        /// <summary>
-        /// Whether the variable is declared as read only.
-        /// </summary>
-        /// <returns><value>TRUE</value> if the variable can only be read
-        /// </returns>
-        public bool ReadOnly { get; private set; }
 
         /// <summary>
         /// Whether the variable is nil.
@@ -202,229 +215,213 @@ namespace BricksBucket.Core.Generic {
         /// Hashcode of this instance.
         /// </summary>
         /// <returns><value>-1</value> if the variable is empty.</returns>
-        public int HashCode {
+        public int HashCode
+        {
             get => _hashCode;
             private set => _hashCode = value;
         }
 
         #endregion
 
+
         #region Class Implementation
+
+        #region Constructuctors
 
         /// <summary>
         /// Creates a new instance of a Variable.
         /// </summary>
-        /// <param name="readOnly">Whether the variable must be
-        /// read only.</param>
-        public DynamicValue (bool readOnly = false) {
+        public DynamicValue()
+        {
             Type = DynamicValueType.NULL;
             Vector4 = Vector4.zero;
             String = string.Empty;
             Asset = null;
-            Curve = new AnimationCurve ();
+            Curve = new AnimationCurve();
             HashCode = -1;
-            ReadOnly = readOnly;
             for (var i = 0; i < curve.keys.Length; i++)
-                curve.RemoveKey (i);
+                curve.RemoveKey(i);
         }
 
         /// <summary>
         /// Clones this instance, overriding the "readonly".
         /// </summary>
-        public DynamicValue Clone (bool readOnly) {
-            var v = new DynamicValue {
+        public DynamicValue Clone()
+        {
+            var v = new DynamicValue
+            {
                 Vector4 = vector,
                 String = stringValue,
                 Curve = curve,
                 Asset = asset,
                 HashCode = HashCode,
                 Type = type,
-                ReadOnly = readOnly
             };
             return v;
         }
 
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        public DynamicValue Clone () => Clone (ReadOnly);
+        #endregion
 
-        /// <summary>
-        /// Returns this value as readonly
-        /// </summary>
-        public DynamicValue AsReadOnly () => ReadOnly ? this : Clone (true);
 
-        /// <summary>
-        /// Clones this instance, returning it as writable.
-        /// </summary>
-        public DynamicValue AsWritable () => Clone (false);
+        #region Overrieded Methods
 
-        /// <summary>
-        /// Performs an assignment with the specified value.
-        /// </summary>
-        public void Assign (DynamicValue dynamicValue) {
-            if (ReadOnly)
-                throw new Exception ("Assigning on r-value");
+        /// <inheritdoc cref="AbstractValue.Set"/>
+        public override void Set(object value)
+        {
 
-            Vector4 = dynamicValue.vector;
-            String = dynamicValue.stringValue;
-            Asset = dynamicValue.asset;
-            Curve = dynamicValue.curve;
-            Type = dynamicValue.Type;
-            HashCode = -1;
-        }
-
-        /// <summary>
-        /// Sets the value of the variable with the specified value.
-        /// </summary>
-        public override void Set (object value) {
-
-            if (ReadOnly)
-                throw new Exception ("Writing on r-value");
-
-            if (value == null) {
+            if (value == null)
+            {
                 Type = DynamicValueType.NULL;
                 return;
             }
 
-            var desiredType = value.GetType ();
+            var desiredType = value.GetType();
 
-            if (desiredType == typeof (bool)) {
+            if (desiredType == typeof(bool))
+            {
                 Type = DynamicValueType.BOOLEAN;
-                Boolean = (bool)Convert.ChangeType (
+                Boolean = (bool) Convert.ChangeType(
                     value,
-                    typeof (bool)
+                    typeof(bool)
                 );
-            } else if (desiredType == typeof (int)) {
+            }
+            else if (desiredType == typeof(int))
+            {
                 Type = DynamicValueType.INTEGER;
-                Integer = (int)Convert.ChangeType (
+                Integer = (int) Convert.ChangeType(
                     value,
-                    typeof (int)
+                    typeof(int)
                 );
-            } else if (desiredType == typeof (float)) {
+            }
+            else if (desiredType == typeof(float))
+            {
                 Type = DynamicValueType.FLOAT;
-                Float = (float)Convert.ChangeType (
+                Float = (float) Convert.ChangeType(
                     value,
-                    typeof (float)
+                    typeof(float)
                 );
-            } else if (desiredType == typeof (double)) {
+            }
+            else if (desiredType == typeof(double))
+            {
                 Type = DynamicValueType.DOUBLE;
-                Double = (double)Convert.ChangeType (
+                Double = (double) Convert.ChangeType(
                     value,
-                    typeof (double)
+                    typeof(double)
                 );
-            } else if (desiredType == typeof (Vector2)) {
+            }
+            else if (desiredType == typeof(Vector2))
+            {
                 Type = DynamicValueType.VECTOR2;
-                Vector2 = (Vector2)Convert.ChangeType (
+                Vector2 = (Vector2) Convert.ChangeType(
                     value,
-                    typeof (Vector2)
+                    typeof(Vector2)
                 );
-            } else if (desiredType == typeof (Vector3)) {
+            }
+            else if (desiredType == typeof(Vector3))
+            {
                 Type = DynamicValueType.VECTOR3;
-                Vector3 = (Vector3)Convert.ChangeType (
+                Vector3 = (Vector3) Convert.ChangeType(
                     value,
-                    typeof (Vector3)
+                    typeof(Vector3)
                 );
-            } else if (desiredType == typeof (Vector4)) {
+            }
+            else if (desiredType == typeof(Vector4))
+            {
                 Type = DynamicValueType.VECTOR4;
-                Vector4 = (Vector4)Convert.ChangeType (
+                Vector4 = (Vector4) Convert.ChangeType(
                     value,
-                    typeof (Vector4)
+                    typeof(Vector4)
                 );
-            } else if (desiredType == typeof (Quaternion)) {
+            }
+            else if (desiredType == typeof(Quaternion))
+            {
                 Type = DynamicValueType.QUATERNION;
-                Quaternion = (Quaternion)Convert.ChangeType (
+                Quaternion = (Quaternion) Convert.ChangeType(
                     value,
-                    typeof (Quaternion)
+                    typeof(Quaternion)
                 );
-            } else if (desiredType == typeof (Color)) {
+            }
+            else if (desiredType == typeof(Color))
+            {
                 Type = DynamicValueType.COLOR;
-                Color = (Color)Convert.ChangeType (
+                Color = (Color) Convert.ChangeType(
                     value,
-                    typeof (Color)
+                    typeof(Color)
                 );
-            } else if (desiredType == typeof (string)) {
+            }
+            else if (desiredType == typeof(string))
+            {
                 Type = DynamicValueType.STRING;
-                String = (string)Convert.ChangeType (
+                String = (string) Convert.ChangeType(
                     value,
-                    typeof (string)
+                    typeof(string)
                 );
-            } else if (desiredType == typeof (AnimationCurve)) {
+            }
+            else if (desiredType == typeof(AnimationCurve))
+            {
                 Type = DynamicValueType.CURVE;
-                Curve = (AnimationCurve)Convert.ChangeType (
+                Curve = (AnimationCurve) Convert.ChangeType(
                     value,
-                    typeof (AnimationCurve)
+                    typeof(AnimationCurve)
                 );
-            } else {
-                try {
+            }
+            else
+            {
+                try
+                {
                     Type = DynamicValueType.ASSET;
                     Asset = value as Object;
                 }
-                catch (Exception e) {
-                    Debug.LogWarning (e);
+                catch (Exception e)
+                {
+                    Debug.LogWarning(e);
                 }
             }
         }
 
-        /// <summary>
-        /// Returns the value of the variable to an object of a T type.
-        /// </summary>
-        /// <typeparam name="T">Desired type.</typeparam>
-        /// <returns>The value of the variable of the type T.</returns>
-        public T Get<T> () {
-            return (T)Get (typeof (T));
-        }
+        /// <inheritdoc cref="AbstractValue.Get"/>
+        public override object Get(Type desiredType)
+        {
 
-        /// <summary>
-        /// Returns this variable to an object of desired type.
-        /// </summary>
-        /// <param name="desiredType">Desired Type.</param>
-        /// <returns>Value of the variable.</returns>
-        /// <exception cref="Exception">Throw exception fi the data type
-        /// property is corrupted.</exception>
-        public override object Get (Type desiredType) {
-
-            if (ReadOnly)
-                throw new Exception ("Writing on r-value");
-
-            if (desiredType == typeof (bool))
+            if (desiredType == typeof(bool))
                 return Boolean;
 
-            if (desiredType == typeof (int))
+            if (desiredType == typeof(int))
                 return Integer;
 
-            if (desiredType == typeof (float))
+            if (desiredType == typeof(float))
                 return Float;
 
-            if (desiredType == typeof (double))
+            if (desiredType == typeof(double))
                 return Double;
 
-            if (desiredType == typeof (Vector2))
+            if (desiredType == typeof(Vector2))
                 return Vector2;
 
-            if (desiredType == typeof (Vector3))
+            if (desiredType == typeof(Vector3))
                 return Vector3;
 
-            if (desiredType == typeof (Vector4))
+            if (desiredType == typeof(Vector4))
                 return Vector4;
 
-            if (desiredType == typeof (Quaternion))
+            if (desiredType == typeof(Quaternion))
                 return Quaternion;
 
-            if (desiredType == typeof (Color))
+            if (desiredType == typeof(Color))
                 return Color;
 
-            if (desiredType == typeof (string))
+            if (desiredType == typeof(string))
                 return String;
 
-            if (desiredType == typeof (AnimationCurve))
+            if (desiredType == typeof(AnimationCurve))
                 return Curve;
 
             return Asset;
         }
 
         /// <inheritdoc cref="System.object"/>
-        public override bool Equals (object obj) {
+        public override bool Equals(object obj)
+        {
             if (!(obj is DynamicValue other))
                 return false;
 
@@ -434,7 +431,8 @@ namespace BricksBucket.Core.Generic {
             if (other.Type != Type)
                 return false;
 
-            switch (Type) {
+            switch (Type)
+            {
                 case DynamicValueType.NULL:
                     return true;
 
@@ -459,50 +457,52 @@ namespace BricksBucket.Core.Generic {
                     return Asset == other.Asset;
 
                 default:
-                    return ReferenceEquals (this, other);
+                    return ReferenceEquals(this, other);
             }
         }
 
         /// <inheritdoc cref="System.object.ToString"/>
-        public override string ToString () {
-            switch (Type) {
+        public override string ToString()
+        {
+            switch (Type)
+            {
 
                 case DynamicValueType.NULL:
                     return "Null";
 
                 case DynamicValueType.BOOLEAN:
-                    return Boolean.ToString ().ToLower ();
+                    return Boolean.ToString().ToLower();
 
                 case DynamicValueType.DOUBLE:
                 case DynamicValueType.INTEGER:
                 case DynamicValueType.FLOAT:
-                    return Float.ToString (
+                    return Float.ToString(
                         CultureInfo.InvariantCulture
                     );
 
                 case DynamicValueType.VECTOR2:
-                    return Vector2.ToString ();
+                    return Vector2.ToString();
 
                 case DynamicValueType.VECTOR3:
-                    return Vector3.ToString ();
+                    return Vector3.ToString();
 
                 case DynamicValueType.VECTOR4:
-                    return Vector4.ToString ();
+                    return Vector4.ToString();
 
                 case DynamicValueType.QUATERNION:
-                    return Quaternion.ToString ();
+                    return Quaternion.ToString();
 
                 case DynamicValueType.COLOR:
-                    return Color.ToString ();
+                    return Color.ToString();
 
                 case DynamicValueType.STRING:
                     return String;
 
                 case DynamicValueType.ASSET:
-                    return Asset.ToString ();
+                    return Asset.ToString();
 
                 case DynamicValueType.CURVE:
-                    return Curve.ToString ();
+                    return Curve.ToString();
 
                 default:
                     return string.Empty;
@@ -510,13 +510,15 @@ namespace BricksBucket.Core.Generic {
         }
 
         /// <inheritdoc cref="System.object.GetHashCode"/>
-        public override int GetHashCode () {
+        public override int GetHashCode()
+        {
             if (HashCode != -1)
                 return HashCode;
 
-            var baseValue = ((int)(Type)) << 27;
+            var baseValue = ((int) (Type)) << 27;
 
-            switch (Type) {
+            switch (Type)
+            {
 
                 case DynamicValueType.NULL:
                     HashCode = 0;
@@ -529,39 +531,39 @@ namespace BricksBucket.Core.Generic {
                 case DynamicValueType.DOUBLE:
                 case DynamicValueType.INTEGER:
                 case DynamicValueType.FLOAT:
-                    HashCode = baseValue ^ Double.GetHashCode ();
+                    HashCode = baseValue ^ Double.GetHashCode();
                     break;
 
                 case DynamicValueType.STRING:
-                    HashCode = baseValue ^ String.GetHashCode ();
+                    HashCode = baseValue ^ String.GetHashCode();
                     break;
 
                 case DynamicValueType.VECTOR2:
-                    HashCode = baseValue ^ Vector2.GetHashCode ();
+                    HashCode = baseValue ^ Vector2.GetHashCode();
                     break;
 
                 case DynamicValueType.VECTOR3:
-                    HashCode = baseValue ^ Vector3.GetHashCode ();
+                    HashCode = baseValue ^ Vector3.GetHashCode();
                     break;
 
                 case DynamicValueType.VECTOR4:
-                    HashCode = baseValue ^ Vector4.GetHashCode ();
+                    HashCode = baseValue ^ Vector4.GetHashCode();
                     break;
 
                 case DynamicValueType.QUATERNION:
-                    HashCode = baseValue ^ Quaternion.GetHashCode ();
+                    HashCode = baseValue ^ Quaternion.GetHashCode();
                     break;
 
                 case DynamicValueType.COLOR:
-                    HashCode = baseValue ^ Color.GetHashCode ();
+                    HashCode = baseValue ^ Color.GetHashCode();
                     break;
 
                 case DynamicValueType.ASSET:
-                    HashCode = baseValue ^ Asset.GetHashCode ();
+                    HashCode = baseValue ^ Asset.GetHashCode();
                     break;
 
                 case DynamicValueType.CURVE:
-                    HashCode = baseValue ^ Curve.GetHashCode ();
+                    HashCode = baseValue ^ Curve.GetHashCode();
                     break;
 
                 default:
@@ -573,6 +575,8 @@ namespace BricksBucket.Core.Generic {
         }
 
         #endregion
-        
+
+        #endregion
+
     }
 }

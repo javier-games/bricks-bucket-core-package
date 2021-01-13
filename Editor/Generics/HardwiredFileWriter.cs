@@ -19,7 +19,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
         /// Original Bricks Bucket Namespace.
         /// </summary>
         private const string BricksBucketNameSpace =
-            "BricksBucket.Core.Generics";
+            "Monogum.BricksBucket.Core.Generics";
 
         /// <summary>
         /// Writer for AbstractComponentRegistry.cs

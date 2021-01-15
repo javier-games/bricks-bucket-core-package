@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Monogum.BricksBucket.Core.Generics
 {
@@ -22,7 +22,7 @@ namespace Monogum.BricksBucket.Core.Generics
         /// <returns><value>TRUE</value>, if the component is contained.
         /// </returns>
         /// <param name="component">Component to look for.</param>
-        bool ContainsComponent(Component component);
+        bool ContainsComponent(Object component);
         
         /// <summary>
         /// Whether the list of registered types contains the given property
@@ -32,7 +32,7 @@ namespace Monogum.BricksBucket.Core.Generics
         /// <param name="component">Component of the property to look for.
         /// </param>
         /// <param name="property">Property to look for.</param>
-        bool ContainsProperty(Component component, string property);
+        bool ContainsProperty(Object component, string property);
         
         /// <summary>
         /// Gets the value of the property.
@@ -40,7 +40,15 @@ namespace Monogum.BricksBucket.Core.Generics
         /// <param name="component">Component of the property.</param>
         /// <param name="property">Property name.</param>
         /// <returns>The value.</returns>
-        object GetValue(Component component, string property);
+        object GetValue(Object component, string property);
+        
+        /// <summary>
+        /// Gets the type of the property.
+        /// </summary>
+        /// <param name="component">Component of the property.</param>
+        /// <param name="property">Property name.</param>
+        /// <returns>The value.</returns>
+        Type GetPropertyType(Object component, string property);
 
         /// <summary>
         /// Sets the value of the given property of the given component.
@@ -48,6 +56,6 @@ namespace Monogum.BricksBucket.Core.Generics
         /// <param name="component">Component of the property.</param>
         /// <param name="property">Property name.</param>
         /// <param name="value">Value.</param>
-        void SetValue(Component component, string property, object value);
+        void SetValue(Object component, string property, object value);
     }
 }

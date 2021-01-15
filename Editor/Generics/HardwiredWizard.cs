@@ -46,7 +46,10 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
         /// <summary>
         /// Creates a Custom Dynamic Environment.
         /// </summary>
-        [MenuItem("Tools/BricksBucket/ComponentRegistry/Create Collection")]
+        [MenuItem(
+            "Tools/BricksBucket/ComponentRegistry/Create Collection",
+            priority = 0
+        )]
         public static void CreateWizard()
         {
             DisplayWizard<HardwiredWizard>(

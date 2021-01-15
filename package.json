@@ -1,6 +1,6 @@
 {
   "name": "games.monogum.bricksbucket.core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "displayName": "Bricks Bucket Core Package",
   "description": "Bucket full of bricks to build something great.",
   "unity": "2020.1",

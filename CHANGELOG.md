@@ -8,6 +8,11 @@
 - Define symbols manager system.
 
 
+## `1.0.2` - January 13th, 2020
+### Fixed
+- Fixed Reference Example
+
+
 ## `1.0.1` - January 13th, 2020
 ### Added
 - Generics example.

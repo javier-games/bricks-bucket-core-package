@@ -164,7 +164,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                 path,
                 false
             );
-            
+
             var content = Template
                 .Replace("{OLD_NAMESPACE}", BricksBucketNameSpace)
                 .Replace("{NEW_NAMESPACE}", hardwired.NameSpace)
@@ -174,7 +174,9 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                 .Replace("{DATE}", $"{DateTime.Now:F}")
                 .Replace("{TYPES}", GetTypes(registeredTypes))
                 .Replace("{ACTIONS}", GetActionsContent(registeredTypes))
-                .Replace("{FUNCTIONS}", GetFunctionsContent(registeredTypes));
+                .Replace("{FUNCTIONS}", GetFunctionsContent(registeredTypes))
+                .Replace("{PROPERTY_TYPES}",
+                    GetTypesPropertiesContent(registeredTypes));
 
             _writer.Write(content);
             _writer.Close();
@@ -296,7 +298,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
 
                 //  Writing Region Component.
                 setDictionary += ActionRegionTemplate
-                    .Replace("{OBJECT_NAME}", registeredTypes[i].ToString())
+                    .Replace("{OBJECT_NAME}", registeredTypes[i].FullName)
                     .Replace("{ACTIONS}", subContent);
                 
                 if (i < registeredTypes.Count - 1)
@@ -347,7 +349,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                     
                     subContent += FunctionTemplate
                         .Replace("{PROPERTY_NAME}", propertiesInfo[j].Name)
-                        .Replace("{OBJECT_NAME}", registeredTypes[i].ToString());
+                        .Replace("{OBJECT_NAME}", registeredTypes[i].FullName);
                     
                     propertiesAdded++;
                     if (propertiesAdded < propertiesToAdd)
@@ -356,8 +358,73 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
 
                 //  Writing Region Component.
                 getDictionary += FunctionRegionTemplate
-                    .Replace("{OBJECT_NAME}", registeredTypes[i].ToString())
+                    .Replace("{OBJECT_NAME}", registeredTypes[i].FullName)
                     .Replace("{FUNCTIONS}", subContent);
+                    
+                if (i < registeredTypes.Count - 1)
+                    getDictionary += ",\n";
+            }
+            return getDictionary;
+        }
+
+        /// <summary>
+        /// Gets the dictionaries of Actions in a string.
+        /// </summary>
+        /// <param name="registeredTypes">List of current registered types.
+        /// </param>
+        /// <returns>Empty if there is any type.</returns>
+        private static string GetTypesPropertiesContent(
+            IReadOnlyList<Type> registeredTypes)
+        {
+            var getDictionary = string.Empty;
+            if (registeredTypes == null || registeredTypes.Count == 0)
+            {
+                return getDictionary;
+            }
+
+            for (var i = 0; i < registeredTypes.Count; i++)
+            {
+
+                var subContent = string.Empty;
+                var propertiesInfo = registeredTypes[i].GetProperties(
+                    BindingFlags.Public | BindingFlags.Instance
+                );
+                var propertiesToAdd = 0;
+                foreach (PropertyInfo propertyInfo in propertiesInfo)
+                    if (
+                        propertyInfo.CanRead &&
+                        propertyInfo.CanWrite &&
+                        !propertyInfo.IsDefined(typeof(ObsoleteAttribute), true)
+                    )
+                        propertiesToAdd++;
+                var propertiesAdded = 0;
+
+                //  Writing Properties.
+                for (var j = 0; j < propertiesInfo.Length; j++)
+                {
+                    if (!propertiesInfo[j].CanRead ||
+                        !propertiesInfo[j].CanWrite || propertiesInfo[j]
+                            .IsDefined(typeof(ObsoleteAttribute), true))
+                        continue;
+
+                    
+                    subContent += TypesTemplate
+                        .Replace(
+                            "{PROPERTY_TYPE}", 
+                            propertiesInfo[j].PropertyType.FullName
+                                .Replace('+', '.'))
+                        .Replace("{PROPERTY_NAME}",
+                            propertiesInfo[j].Name);
+
+                    propertiesAdded++;
+                    if (propertiesAdded < propertiesToAdd)
+                        subContent += ",";
+                }
+
+                //  Writing Region Component.
+                getDictionary += TypesRegionTemplate
+                    .Replace("{OBJECT_NAME}", registeredTypes[i].FullName)
+                    .Replace("{PROPERTY_TYPES}", subContent);
                     
                 if (i < registeredTypes.Count - 1)
                     getDictionary += ",\n";
@@ -444,35 +511,36 @@ namespace {NEW_NAMESPACE}
 
 		/// <inheritdoc cref=""{OLD_NAMESPACE}.AbstractComponentRegistry.Set""/>
         protected override
-			Dictionary<Type, Dictionary<string, Action<object, object>>> Set
+			Dictionary<string, Dictionary<string, Action<object, object>>> Set
 		{
 			get;
-		} = new Dictionary<Type, Dictionary<string, Action<object, object>>>
+		} = new Dictionary<string, Dictionary<string, Action<object, object>>>
         {
             {ACTIONS}
 		};
 
 		/// <inheritdoc cref=""{OLD_NAMESPACE}.AbstractComponentRegistry.Get""/>
         protected override
-			Dictionary<Type, Dictionary<string, Func<object, object>>> Get
+			Dictionary<string, Dictionary<string, Func<object, object>>> Get
 		{
 			get;
-		} = new Dictionary<Type, Dictionary<string, Func<object, object>>>
+		} = new Dictionary<string, Dictionary<string, Func<object, object>>>
 		{
             {FUNCTIONS}
         };
 
+		/// <inheritdoc cref=""{OLD_NAMESPACE}.AbstractComponentRegistry.PropertyType""/>
+        protected override
+			Dictionary<string, Dictionary<string, Type>> PropertyType
+		{
+			get;
+		} = new Dictionary<string, Dictionary<string, Type>>
+		{
+            {PROPERTY_TYPES}
+        };
+
         #region Methods
 #if UNITY_EDITOR
-
-        /// <summary>
-        /// Resets the componentRegistry file.
-        /// </summary>
-        [UnityEditor.MenuItem(""Tools/BricksBucket/ComponentRegistry/{NEW_NAMESPACE} {CLASS_NAME}/Reset"")]
-        public static void Reset()
-        {
-            {OLD_NAMESPACE}.Editor.HardwiredFileWriter.ResetFile(new {CLASS_NAME}());
-        }
 
         /// <summary>
         /// Rebuilds the componentRegistry file.
@@ -481,6 +549,15 @@ namespace {NEW_NAMESPACE}
         public static void Rebuild()
         {
             {OLD_NAMESPACE}.Editor.HardwiredFileWriter.ReWriteFile(new {CLASS_NAME}());
+        }
+
+        /// <summary>
+        /// Resets the componentRegistry file.
+        /// </summary>
+        [UnityEditor.MenuItem(""Tools/BricksBucket/ComponentRegistry/{NEW_NAMESPACE} {CLASS_NAME}/Reset"")]
+        public static void Reset()
+        {
+            {OLD_NAMESPACE}.Editor.HardwiredFileWriter.ResetFile(new {CLASS_NAME}());
         }
         
 #endif
@@ -503,7 +580,7 @@ namespace {NEW_NAMESPACE}
             {
 				#region {OBJECT_NAME}
 
-                typeof({OBJECT_NAME}),
+                ""{OBJECT_NAME}"",
                 new Dictionary<string, Action<object, object>>
                 {
                     {ACTIONS}
@@ -530,7 +607,7 @@ namespace {NEW_NAMESPACE}
             {
 				#region {OBJECT_NAME}
 
-                typeof({OBJECT_NAME}),
+                ""{OBJECT_NAME}"",
                 new Dictionary<string, Func<object, object>>
                 {
                     {FUNCTIONS}
@@ -547,6 +624,31 @@ namespace {NEW_NAMESPACE}
                         ""{PROPERTY_NAME}"",
                         (component) =>
                             (component as {OBJECT_NAME}).{PROPERTY_NAME}
+                    }";
+        
+        /// <summary>
+        /// Template for a region on a functions dictionary.
+        /// </summary>
+        private const string TypesRegionTemplate = @"                
+            {
+				#region {OBJECT_NAME}
+
+                ""{OBJECT_NAME}"",
+                new Dictionary<string, Type>
+                {
+                    {PROPERTY_TYPES}
+                }
+
+                #endregion
+            }";
+        
+        /// <summary>
+        /// Template for a function on a dictionary.
+        /// </summary>
+        private const string TypesTemplate = @"
+                    {
+                        ""{PROPERTY_NAME}"",
+                        typeof({PROPERTY_TYPE})
                     }";
 
         #endregion

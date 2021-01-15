@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using Object = UnityEngine.Object;
 
 // ReSharper disable MemberCanBeMadeStatic.Global
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
@@ -42,22 +42,22 @@ namespace Monogum.BricksBucket.Core.Generics
 		/// Dictionary of actions to set values.
 		/// </summary>
 		protected virtual
-			Dictionary<Type, Dictionary<string, Action<object, object>>> Set
+			Dictionary<string, Dictionary<string, Action<object, object>>> Set
 		{
 			get;
 		}
-			= new Dictionary<Type, Dictionary<string, Action<object, object>>
+			= new Dictionary<string, Dictionary<string, Action<object, object>>
 			>();
 
 		/// <summary>
 		/// Dictionary of functions to return values.
 		/// </summary>
 		protected virtual
-			Dictionary<Type, Dictionary<string, Func<object, object>>> Get
+			Dictionary<string, Dictionary<string, Func<object, object>>> Get
 		{
 			get;
 		}
-			= new Dictionary<Type, Dictionary<string, Func<object, object>>>();
+			= new Dictionary<string, Dictionary<string, Func<object, object>>>();
 		
 		/// <inheritdoc cref="IComponentRegistry.ComponentTypes"/>
 		public IEnumerable<Type> ComponentTypes => ComponentTypesList;
@@ -68,40 +68,78 @@ namespace Monogum.BricksBucket.Core.Generics
 		#region Methods
 
 		/// <inheritdoc cref="IComponentRegistry.ContainsComponent"/>
-		public bool ContainsComponent(Component component) =>
-			Set.ContainsKey(component.GetType()) &&
-			Get.ContainsKey(component.GetType());
+		public bool ContainsComponent(Object component)
+		{
+			if (component == null)
+			{
+				return false;
+			}
+			
+			var componentName = component.GetType().FullName;
+			if (string.IsNullOrWhiteSpace(componentName))
+			{
+				return false;
+			}
+			
+			return Set.ContainsKey(componentName) &&
+			       Get.ContainsKey(componentName);
+		}
 
 		/// <inheritdoc cref="IComponentRegistry.ContainsProperty"/>
-		public bool ContainsProperty(Component component, string property) =>
-			Set[component.GetType()].ContainsKey(property) &&
-			Get[component.GetType()].ContainsKey(property);
+		public bool ContainsProperty(Object component, string property)
+		{
+			if (component == null)
+			{
+				return false;
+			}
+			
+			var componentName = component.GetType().FullName;
+			if (string.IsNullOrWhiteSpace(componentName))
+			{
+				return false;
+			}
+			
+			return Set[componentName].ContainsKey(property) &&
+				Get[componentName].ContainsKey(property);
+		}
 
 		/// <inheritdoc cref="IComponentRegistry.GetValue"/>
-		public object GetValue(Component component, string property)
+		public object GetValue(Object component, string property)
 		{
-			try
+			if (component == null)
 			{
-				return Get[component.GetType()][property](component);
-			}
-			catch
-			{
-				// TODO: Add Feedback or Create TryGetValue.
 				return null;
 			}
+			
+			var componentName = component.GetType().FullName;
+			var valid =
+				!string.IsNullOrWhiteSpace(componentName) &&
+				ContainsComponent(component) &&
+				ContainsProperty(component, property);
+			
+			return !valid ? null : Get[componentName][property](component);
 		}
 
 		/// <inheritdoc cref="IComponentRegistry.SetValue"/>
-		public void SetValue(Component component, string property, object value)
+		public void SetValue(Object component, string property, object value)
 		{
-			try
+			if (component == null)
 			{
-				Set[component.GetType()][property](component, value);
+				return;
 			}
-			catch
+			
+			var componentName = component.GetType().FullName;
+			var valid =
+				!string.IsNullOrWhiteSpace(componentName) &&
+				ContainsComponent(component) &&
+				ContainsProperty(component, property);
+
+			if (!valid)
 			{
-				// TODO: Add Feedback or Create TrySetValue.
+				return;
 			}
+			
+			Set[componentName][property](component, value);
 		}
 
 		#endregion

@@ -296,7 +296,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
 
                 //  Writing Region Component.
                 setDictionary += ActionRegionTemplate
-                    .Replace("{OBJECT_NAME}", registeredTypes[i].ToString())
+                    .Replace("{OBJECT_NAME}", registeredTypes[i].FullName)
                     .Replace("{ACTIONS}", subContent);
                 
                 if (i < registeredTypes.Count - 1)
@@ -347,7 +347,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                     
                     subContent += FunctionTemplate
                         .Replace("{PROPERTY_NAME}", propertiesInfo[j].Name)
-                        .Replace("{OBJECT_NAME}", registeredTypes[i].ToString());
+                        .Replace("{OBJECT_NAME}", registeredTypes[i].FullName);
                     
                     propertiesAdded++;
                     if (propertiesAdded < propertiesToAdd)
@@ -356,7 +356,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
 
                 //  Writing Region Component.
                 getDictionary += FunctionRegionTemplate
-                    .Replace("{OBJECT_NAME}", registeredTypes[i].ToString())
+                    .Replace("{OBJECT_NAME}", registeredTypes[i].FullName)
                     .Replace("{FUNCTIONS}", subContent);
                     
                 if (i < registeredTypes.Count - 1)
@@ -444,20 +444,20 @@ namespace {NEW_NAMESPACE}
 
 		/// <inheritdoc cref=""{OLD_NAMESPACE}.AbstractComponentRegistry.Set""/>
         protected override
-			Dictionary<Type, Dictionary<string, Action<object, object>>> Set
+			Dictionary<string, Dictionary<string, Action<object, object>>> Set
 		{
 			get;
-		} = new Dictionary<Type, Dictionary<string, Action<object, object>>>
+		} = new Dictionary<string, Dictionary<string, Action<object, object>>>
         {
             {ACTIONS}
 		};
 
 		/// <inheritdoc cref=""{OLD_NAMESPACE}.AbstractComponentRegistry.Get""/>
         protected override
-			Dictionary<Type, Dictionary<string, Func<object, object>>> Get
+			Dictionary<string, Dictionary<string, Func<object, object>>> Get
 		{
 			get;
-		} = new Dictionary<Type, Dictionary<string, Func<object, object>>>
+		} = new Dictionary<string, Dictionary<string, Func<object, object>>>
 		{
             {FUNCTIONS}
         };
@@ -466,21 +466,21 @@ namespace {NEW_NAMESPACE}
 #if UNITY_EDITOR
 
         /// <summary>
-        /// Resets the componentRegistry file.
-        /// </summary>
-        [UnityEditor.MenuItem(""Tools/BricksBucket/ComponentRegistry/{NEW_NAMESPACE} {CLASS_NAME}/Reset"")]
-        public static void Reset()
-        {
-            {OLD_NAMESPACE}.Editor.HardwiredFileWriter.ResetFile(new {CLASS_NAME}());
-        }
-
-        /// <summary>
         /// Rebuilds the componentRegistry file.
         /// </summary>
         [UnityEditor.MenuItem(""Tools/BricksBucket/ComponentRegistry/{NEW_NAMESPACE} {CLASS_NAME}/Rebuild"")]
         public static void Rebuild()
         {
             {OLD_NAMESPACE}.Editor.HardwiredFileWriter.ReWriteFile(new {CLASS_NAME}());
+        }
+
+        /// <summary>
+        /// Resets the componentRegistry file.
+        /// </summary>
+        [UnityEditor.MenuItem(""Tools/BricksBucket/ComponentRegistry/{NEW_NAMESPACE} {CLASS_NAME}/Reset"")]
+        public static void Reset()
+        {
+            {OLD_NAMESPACE}.Editor.HardwiredFileWriter.ResetFile(new {CLASS_NAME}());
         }
         
 #endif
@@ -503,7 +503,7 @@ namespace {NEW_NAMESPACE}
             {
 				#region {OBJECT_NAME}
 
-                typeof({OBJECT_NAME}),
+                ""{OBJECT_NAME}"",
                 new Dictionary<string, Action<object, object>>
                 {
                     {ACTIONS}
@@ -530,7 +530,7 @@ namespace {NEW_NAMESPACE}
             {
 				#region {OBJECT_NAME}
 
-                typeof({OBJECT_NAME}),
+                ""{OBJECT_NAME}"",
                 new Dictionary<string, Func<object, object>>
                 {
                     {FUNCTIONS}

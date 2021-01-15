@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Monogum.BricksBucket.Core.Generics
 {
@@ -9,7 +10,7 @@ namespace Monogum.BricksBucket.Core.Generics
     /// <typeparam name="TRegistry">Type of the hardwired script inheritor.
     /// </typeparam>
     /// <typeparam name="TValue">Type of the value of the property.</typeparam>
-    [System.Serializable]
+    [Serializable]
     public abstract class AbstractPropertyReference<TRegistry, TValue> :
         IPropertyReference
         where TRegistry : AbstractComponentRegistry, new()
@@ -26,7 +27,7 @@ namespace Monogum.BricksBucket.Core.Generics
         /// Reference to the instance object.
         /// </summary>
         [SerializeField]
-        private Component component;
+        private Object component;
 
         /// <summary>
         /// Name of the property of the component.
@@ -49,7 +50,7 @@ namespace Monogum.BricksBucket.Core.Generics
         /// </summary>
         /// <returns>Reference to the component that contains the property.
         /// </returns>
-        public Component Component
+        public Object Component
         {
             get => component;
             protected set => component = value;
@@ -66,7 +67,7 @@ namespace Monogum.BricksBucket.Core.Generics
         }
 
         /// <inheritdoc cref="IPropertyReference.ValueType"/>
-        public virtual Type ValueType { get; set; }
+        public virtual Type ValueType { get;}
 
         /// <summary>
         /// Instance of hardwired class.
@@ -97,12 +98,12 @@ namespace Monogum.BricksBucket.Core.Generics
         /// Set the object reference.
         /// </summary>
         /// <param name="reference">New reference.</param>
-        public void SetComponent(Component reference)
+        public void SetComponent(Object reference)
         {
             if (Component == reference) return;
             Component = reference;
             Property = string.Empty;
-            UpdateValue(GetValue());
+            UpdateReference();
         }
 
         /// <summary>
@@ -111,13 +112,13 @@ namespace Monogum.BricksBucket.Core.Generics
         public void SetProperty(string propertyName)
         {
             Property = propertyName;
-            UpdateValue(GetValue());
+            UpdateReference();
         }
 
         /// <summary>
         /// Updates the variable.
         /// </summary>
-        public virtual void UpdateValue(object currentPropertyValue) { }
+        public virtual void UpdateReference() { }
 
         /// <summary>
         /// Gets the value of the variable.

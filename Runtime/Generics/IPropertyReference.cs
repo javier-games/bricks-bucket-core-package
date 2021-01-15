@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Monogum.BricksBucket.Core.Generics
 {
@@ -13,7 +14,7 @@ namespace Monogum.BricksBucket.Core.Generics
         /// Reference to the instance object.
         /// </summary>
         /// <returns>A reference.</returns>
-        Component Component { get; }
+        Object Component { get; }
         
         /// <summary>
         /// Name of the property of the component.
@@ -58,6 +59,6 @@ namespace Monogum.BricksBucket.Core.Generics
         /// Set the object reference.
         /// </summary>
         /// <param name="reference">New reference.</param>
-        void SetComponent(Component reference);
+        void SetComponent(Object reference);
     }
 }

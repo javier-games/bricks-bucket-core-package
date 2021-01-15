@@ -1,4 +1,4 @@
-namespace Monogum.BricksBucket.Core.Examples.Generics
+namespace Monogum.BricksBucket.Core.Examples.DynamicProperties
 {
     /// <!-- DataType -->
     /// <summary>

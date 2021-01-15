@@ -4,7 +4,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 using Monogum.BricksBucket.Core.Generics;
 
-namespace Monogum.BricksBucket.Core.Examples.Generics
+namespace Monogum.BricksBucket.Core.Examples.DynamicProperties
 {
 
     /// <!-- Variable -->
@@ -78,6 +78,12 @@ namespace Monogum.BricksBucket.Core.Examples.Generics
 
                 type = value;
             }
+        }
+
+        public Type SystemType
+        {
+            get => DynamicValueType2Type(Type);
+            set => Type = Type2DynamicValueType(value);
         }
 
         /// <summary>
@@ -268,155 +274,136 @@ namespace Monogum.BricksBucket.Core.Examples.Generics
         /// <inheritdoc cref="AbstractValue.Set"/>
         public override void Set(object value)
         {
-
-            if (value == null)
+            switch (Type)
             {
-                Type = DynamicValueType.NULL;
-                return;
-            }
-
-            var desiredType = value.GetType();
-
-            if (desiredType == typeof(bool))
-            {
-                Type = DynamicValueType.BOOLEAN;
-                Boolean = (bool) Convert.ChangeType(
-                    value,
-                    typeof(bool)
-                );
-            }
-            else if (desiredType == typeof(int))
-            {
-                Type = DynamicValueType.INTEGER;
-                Integer = (int) Convert.ChangeType(
-                    value,
-                    typeof(int)
-                );
-            }
-            else if (desiredType == typeof(float))
-            {
-                Type = DynamicValueType.FLOAT;
-                Float = (float) Convert.ChangeType(
-                    value,
-                    typeof(float)
-                );
-            }
-            else if (desiredType == typeof(double))
-            {
-                Type = DynamicValueType.DOUBLE;
-                Double = (double) Convert.ChangeType(
-                    value,
-                    typeof(double)
-                );
-            }
-            else if (desiredType == typeof(Vector2))
-            {
-                Type = DynamicValueType.VECTOR2;
-                Vector2 = (Vector2) Convert.ChangeType(
-                    value,
-                    typeof(Vector2)
-                );
-            }
-            else if (desiredType == typeof(Vector3))
-            {
-                Type = DynamicValueType.VECTOR3;
-                Vector3 = (Vector3) Convert.ChangeType(
-                    value,
-                    typeof(Vector3)
-                );
-            }
-            else if (desiredType == typeof(Vector4))
-            {
-                Type = DynamicValueType.VECTOR4;
-                Vector4 = (Vector4) Convert.ChangeType(
-                    value,
-                    typeof(Vector4)
-                );
-            }
-            else if (desiredType == typeof(Quaternion))
-            {
-                Type = DynamicValueType.QUATERNION;
-                Quaternion = (Quaternion) Convert.ChangeType(
-                    value,
-                    typeof(Quaternion)
-                );
-            }
-            else if (desiredType == typeof(Color))
-            {
-                Type = DynamicValueType.COLOR;
-                Color = (Color) Convert.ChangeType(
-                    value,
-                    typeof(Color)
-                );
-            }
-            else if (desiredType == typeof(string))
-            {
-                Type = DynamicValueType.STRING;
-                String = (string) Convert.ChangeType(
-                    value,
-                    typeof(string)
-                );
-            }
-            else if (desiredType == typeof(AnimationCurve))
-            {
-                Type = DynamicValueType.CURVE;
-                Curve = (AnimationCurve) Convert.ChangeType(
-                    value,
-                    typeof(AnimationCurve)
-                );
-            }
-            else
-            {
-                try
-                {
-                    Type = DynamicValueType.ASSET;
-                    Asset = value as Object;
-                }
-                catch (Exception e)
-                {
-                    Debug.LogWarning(e);
-                }
+                case DynamicValueType.NULL:
+                    return;
+                
+                case DynamicValueType.BOOLEAN:
+                    Boolean = (bool) Convert.ChangeType(
+                        value,
+                        typeof(bool)
+                    );
+                    break;
+                
+                case DynamicValueType.INTEGER:
+                    Integer = (int) Convert.ChangeType(
+                        value,
+                        typeof(int)
+                    );
+                    break;
+                
+                case DynamicValueType.FLOAT:
+                    Float = (float) Convert.ChangeType(
+                        value,
+                        typeof(float)
+                    );
+                    break;
+                
+                case DynamicValueType.DOUBLE:
+                    Double = (double) Convert.ChangeType(
+                        value,
+                        typeof(double)
+                    );
+                    break;
+                
+                case DynamicValueType.VECTOR2:
+                    Vector2 = (Vector2) Convert.ChangeType(
+                        value,
+                        typeof(Vector2)
+                    );
+                    break;
+                
+                case DynamicValueType.VECTOR3:
+                    Vector3 = (Vector3) Convert.ChangeType(
+                        value,
+                        typeof(Vector3)
+                    );
+                    break;
+                
+                case DynamicValueType.VECTOR4:
+                    Vector4 = (Vector4) Convert.ChangeType(
+                        value,
+                        typeof(Vector4)
+                    );
+                    break;
+                
+                case DynamicValueType.QUATERNION:
+                    Quaternion = (Quaternion) Convert.ChangeType(
+                        value,
+                        typeof(Quaternion)
+                    );
+                    break;
+                
+                case DynamicValueType.COLOR:
+                    Color = (Color) Convert.ChangeType(
+                        value,
+                        typeof(Color)
+                    );
+                    break;
+                
+                case DynamicValueType.CURVE:
+                    Curve = (AnimationCurve) Convert.ChangeType(
+                        value,
+                        typeof(AnimationCurve)
+                    );
+                    break;
+                
+                case DynamicValueType.STRING:
+                    String = (string) Convert.ChangeType(
+                        value,
+                        typeof(string)
+                    );
+                    break;
+                
+                case DynamicValueType.ASSET:
+                    if (value is Object o)
+                    {
+                        Asset = o;
+                    }
+                    break;
+                
+                default:
+                    return;
             }
         }
 
         /// <inheritdoc cref="AbstractValue.Get"/>
         public override object Get(Type desiredType)
         {
-
-            if (desiredType == typeof(bool))
-                return Boolean;
-
-            if (desiredType == typeof(int))
-                return Integer;
-
-            if (desiredType == typeof(float))
-                return Float;
-
-            if (desiredType == typeof(double))
-                return Double;
-
-            if (desiredType == typeof(Vector2))
-                return Vector2;
-
-            if (desiredType == typeof(Vector3))
-                return Vector3;
-
-            if (desiredType == typeof(Vector4))
-                return Vector4;
-
-            if (desiredType == typeof(Quaternion))
-                return Quaternion;
-
-            if (desiredType == typeof(Color))
-                return Color;
-
-            if (desiredType == typeof(string))
-                return String;
-
-            if (desiredType == typeof(AnimationCurve))
-                return Curve;
-
-            return Asset;
+            var desiredDynamicValueType = Type2DynamicValueType(desiredType);
+            switch (desiredDynamicValueType)
+            {
+                case DynamicValueType.NULL:
+                    return Boolean;
+                case DynamicValueType.BOOLEAN:
+                    return Integer;
+                case DynamicValueType.INTEGER:
+                    return Float;
+                case DynamicValueType.FLOAT:
+                    break;
+                case DynamicValueType.DOUBLE:
+                    return Double;
+                case DynamicValueType.VECTOR2:
+                    return Vector2;
+                case DynamicValueType.VECTOR3:
+                    return Vector3;
+                case DynamicValueType.VECTOR4:
+                    return Vector4;
+                case DynamicValueType.QUATERNION:
+                    return Quaternion;
+                case DynamicValueType.COLOR:
+                    return Color;
+                case DynamicValueType.CURVE:
+                    return Curve;
+                case DynamicValueType.STRING:
+                    return String;
+                case DynamicValueType.ASSET:
+                    return Asset;
+                default:
+                    return null;
+            }
+            return null;
         }
 
         /// <inheritdoc cref="System.object"/>
@@ -462,52 +449,27 @@ namespace Monogum.BricksBucket.Core.Examples.Generics
         }
 
         /// <inheritdoc cref="System.object.ToString"/>
-        public override string ToString()
-        {
-            switch (Type)
+        public override string ToString() =>
+            Type switch
             {
-
-                case DynamicValueType.NULL:
-                    return "Null";
-
-                case DynamicValueType.BOOLEAN:
-                    return Boolean.ToString().ToLower();
-
-                case DynamicValueType.DOUBLE:
-                case DynamicValueType.INTEGER:
-                case DynamicValueType.FLOAT:
-                    return Float.ToString(
-                        CultureInfo.InvariantCulture
-                    );
-
-                case DynamicValueType.VECTOR2:
-                    return Vector2.ToString();
-
-                case DynamicValueType.VECTOR3:
-                    return Vector3.ToString();
-
-                case DynamicValueType.VECTOR4:
-                    return Vector4.ToString();
-
-                case DynamicValueType.QUATERNION:
-                    return Quaternion.ToString();
-
-                case DynamicValueType.COLOR:
-                    return Color.ToString();
-
-                case DynamicValueType.STRING:
-                    return String;
-
-                case DynamicValueType.ASSET:
-                    return Asset.ToString();
-
-                case DynamicValueType.CURVE:
-                    return Curve.ToString();
-
-                default:
-                    return string.Empty;
-            }
-        }
+                DynamicValueType.NULL => "Null",
+                DynamicValueType.BOOLEAN => Boolean.ToString().ToLower(),
+                DynamicValueType.DOUBLE => Float.ToString(CultureInfo
+                    .InvariantCulture),
+                DynamicValueType.INTEGER => Float.ToString(CultureInfo
+                    .InvariantCulture),
+                DynamicValueType.FLOAT => Float.ToString(CultureInfo
+                    .InvariantCulture),
+                DynamicValueType.VECTOR2 => Vector2.ToString(),
+                DynamicValueType.VECTOR3 => Vector3.ToString(),
+                DynamicValueType.VECTOR4 => Vector4.ToString(),
+                DynamicValueType.QUATERNION => Quaternion.ToString(),
+                DynamicValueType.COLOR => Color.ToString(),
+                DynamicValueType.STRING => String,
+                DynamicValueType.ASSET => Asset.ToString(),
+                DynamicValueType.CURVE => Curve.ToString(),
+                _ => string.Empty
+            };
 
         /// <inheritdoc cref="System.object.GetHashCode"/>
         public override int GetHashCode()
@@ -575,6 +537,40 @@ namespace Monogum.BricksBucket.Core.Examples.Generics
         }
 
         #endregion
+
+        public static DynamicValueType Type2DynamicValueType(Type type) =>
+            type == typeof(bool) ? DynamicValueType.BOOLEAN :
+            type == typeof(int) ? DynamicValueType.INTEGER :
+            type == typeof(float) ? DynamicValueType.FLOAT :
+            type == typeof(double) ? DynamicValueType.DOUBLE :
+            type == typeof(Vector2) ? DynamicValueType.VECTOR2 :
+            type == typeof(Vector3) ? DynamicValueType.VECTOR3 :
+            type == typeof(Vector4) ? DynamicValueType.VECTOR4 :
+            type == typeof(Quaternion) ? DynamicValueType.QUATERNION :
+            type == typeof(Color) ? DynamicValueType.COLOR :
+            type == typeof(string) ? DynamicValueType.STRING :
+            type == typeof(AnimationCurve) ? DynamicValueType.CURVE :
+            type == typeof(Object) ? DynamicValueType.ASSET :
+            DynamicValueType.NULL;
+
+        public static Type DynamicValueType2Type(DynamicValueType type) =>
+            type switch
+            {
+                DynamicValueType.NULL => null,
+                DynamicValueType.BOOLEAN => typeof(bool),
+                DynamicValueType.INTEGER => typeof(int),
+                DynamicValueType.FLOAT => typeof(float),
+                DynamicValueType.DOUBLE => typeof(double),
+                DynamicValueType.VECTOR2 => typeof(Vector2),
+                DynamicValueType.VECTOR3 => typeof(Vector3),
+                DynamicValueType.VECTOR4 => typeof(Vector4),
+                DynamicValueType.QUATERNION => typeof(Quaternion),
+                DynamicValueType.COLOR => typeof(Color),
+                DynamicValueType.CURVE => typeof(AnimationCurve),
+                DynamicValueType.STRING => typeof(string),
+                DynamicValueType.ASSET => typeof(Object),
+                _ => null
+            };
 
         #endregion
 

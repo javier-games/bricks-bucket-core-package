@@ -15,40 +15,27 @@ namespace Monogum.BricksBucket.Core.Examples.DynamicProperties.Editor
     [CustomPropertyDrawer(typeof(DynamicProperty))]
     public class DynamicPropertyDrawer : PropertyDrawer
     {
-
         #region Fields
-
-        /// <summary>
-        /// Height of a standard single line.
-        /// </summary>
-        private readonly float _fieldSize = EditorGUIUtility.singleLineHeight;
 
         /// <summary>
         /// References of a dynamic variable.
         /// </summary>
-        private readonly DynamicProperty _dynRef = new DynamicProperty();
-
-        /// <summary>
-        /// List that the stores the properties and components.
-        /// </summary>
-        private readonly List<string> _dropdown = new List<string>();
-
-        /// <summary>
-        /// Reference of propertiesInfo.
-        /// </summary>
-        private PropertyInfo[] _propertiesInfo;
-
+        private readonly DynamicProperty _reference = new DynamicProperty();
+        
         /// <summary>
         /// Reference of components.
         /// </summary>
         private Component[] _components;
-
+        
         /// <summary>
-        /// Size of padding.
+        /// Reference of propertiesInfo.
         /// </summary>
-        private const float Padding = 5;
-
-        private Object _refAttempt;
+        private PropertyInfo[] _propertiesInfo;
+        
+        /// <summary>
+        /// List that the stores the properties and components.
+        /// </summary>
+        private readonly List<string> _dropdown = new List<string>();
 
         #endregion
 
@@ -60,134 +47,99 @@ namespace Monogum.BricksBucket.Core.Examples.DynamicProperties.Editor
         {
 
             //  Getting the properties references.
-            var valueProperty = property.FindPropertyRelative("value");
             var componentProperty = property.FindPropertyRelative("component");
             var namePropProperty = property.FindPropertyRelative("property");
 
-            _dynRef.SetComponent(componentProperty.objectReferenceValue);
-            _dynRef.SetProperty(namePropProperty.stringValue);
+            _reference.SetComponent(componentProperty.objectReferenceValue);
+            _reference.SetProperty(namePropProperty.stringValue);
 
-            // Component Unselected.
-            if (_dynRef.Component == null)
+            if (_reference.Component == null)
             {
-                SelectComponent(position, property, label);
-                return;
-            }
-            
-            // Component un registered
-            if (!_dynRef.ComponentRegistry.ContainsComponent(_dynRef.Component))
-            {
-                RegisterComponent(position, property, label);
-                return;
-            }
-            
-            //  If component is different to null.
-            if (
-                _dynRef.Component != null &&
-                string.IsNullOrEmpty(_dynRef.Property)
-            )
-            {
-                SelectProperty(position, property, label);
+                SelectObject(position);
+                StoreData(property);
                 return;
             }
 
-            DrawProperties(position, property, new GUIContent(namePropProperty.stringValue));
-                
-            //  Update properties values.
-            StoreData(property, valueProperty);
+            if (_reference.Component as GameObject)
+            {
+                SelectComponent(position);
+                StoreData(property);
+                return;
+            }
+
+            if (!_reference.Registry.ContainsComponent(_reference.Component))
+            {
+                RegistryComponent(position);
+                StoreData(property);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(_reference.Property))
+            {
+                SelectProperty(position);
+                StoreData(property);
+                return;
+            }
+
+            DrawReference(position);
+            StoreData(property);
         }
 
-        private void SelectComponent(Rect position, SerializedProperty property,
-            GUIContent label)
+        private void SelectObject(Rect position)
         {
-            var dynamicValue = property.FindPropertyRelative("value");
-            // Component selected
-            if (_refAttempt == null)
-            {
-                EditorGUI.BeginChangeCheck();
-                _refAttempt = EditorGUI.ObjectField(
-                    position: position,
-                    label: "Select Object",
-                    obj: _dynRef.Component,
-                    objType: _dynRef.Component != null
-                        ? _dynRef.Component.GetType()
-                        : typeof(Object),
-                    allowSceneObjects: true
-                );
-                if (EditorGUI.EndChangeCheck())
-                {
-                    if (!(_refAttempt is GameObject))
-                    {
-                        _dynRef.SetComponent(
-                            _refAttempt);
-                        _refAttempt = null;
-                    }
-                }
+            EditorGUI.BeginChangeCheck();
+            var objectAttempt = EditorGUI.ObjectField(
+                position: position,
+                label: "Select Object",
+                obj: _reference.Component,
+                objType: typeof(Object),
+                allowSceneObjects: true
+            );
+            if (!EditorGUI.EndChangeCheck()) return;
+            _reference.SetComponent(objectAttempt);
+        }
 
-                StoreData(property, dynamicValue);
-                return;
-            }
-
-            _components = (_refAttempt as GameObject)?
+        private void SelectComponent(Rect position)
+        {
+            // Set up dropdown.
+            _components = (_reference.Component as GameObject)?
                 .GetComponents<Component>();
             _dropdown.Clear();
             _dropdown.Add("[Component]");
-            _dropdown.Add("GameObject");
             if (_components != null)
             {
                 foreach (var component in _components)
                     _dropdown.Add(component.GetType().Name);
             }
-
             _dropdown.Add("[Remove]");
 
-            var compIndex = 0;
+            
+            var componentIndex = 0;
             EditorGUI.BeginChangeCheck();
-            compIndex = EditorGUI.Popup(
+            componentIndex = EditorGUI.Popup(
                 position,
-                "Select",
-                compIndex,
+                "Component",
+                componentIndex,
                 _dropdown.ToArray()
             );
-            if (EditorGUI.EndChangeCheck())
+            if (!EditorGUI.EndChangeCheck()) return;
+            
+            // Delete option.
+            if (componentIndex == _dropdown.Count - 1)
             {
-                // Delete option.
-                if (compIndex == _dropdown.Count - 1)
-                {
-                    _dynRef.SetComponent(null);
-                    _refAttempt = null;
-                    StoreData(property, dynamicValue);
-                    return;
-                }
-
-                // Select GameObject
-                if (compIndex == 1)
-                {
-                    _dynRef.SetComponent(
-                        _refAttempt);
-                    _refAttempt = null;
-                    StoreData(property, dynamicValue);
-                    return;
-                }
-
-                // Component Selected
-                if (compIndex != 0 && _components != null)
-                {
-                    _dynRef.SetComponent(_components[compIndex - 2]);
-                    _refAttempt = null;
-                    StoreData(property, dynamicValue);
-                    return;
-                }
+                _reference.SetComponent(null);
+                return;
             }
 
-            StoreData(property, dynamicValue);
+            // Component Selected
+            if (componentIndex == 0 || _components == null) return;
+            _reference.SetComponent(_components[componentIndex - 1]);
         }
 
-        private void RegisterComponent(Rect position, SerializedProperty property,
-            GUIContent label)
+        private void RegistryComponent(Rect position)
         {
-            var dynamicValue = property.FindPropertyRelative("value");
-            var type = _dynRef.Component.GetType();
+            var type = _reference.Component.GetType();
+            
             var rectMessage = position;
             rectMessage.width = EditorGUIUtility.labelWidth;
             var rectButtonCancel = position;
@@ -196,14 +148,13 @@ namespace Monogum.BricksBucket.Core.Examples.DynamicProperties.Editor
             rectButtonCancel.x = position.x + rectMessage.width;
             var rectButtonOk = rectButtonCancel;
             rectButtonOk.x += rectButtonCancel.width;
-            rectMessage.width -= Padding;
+            rectMessage.width -= 5;
 
             EditorGUI.LabelField(
                 rectMessage,
                 new GUIContent(
                     "Not Registered!",
-                    EditorGUIUtility.IconContent("console.warnicon.sml")
-                        .image,
+                    EditorGUIUtility.IconContent("console.warnicon.sml").image,
                     $"The Object {type.Name} is not registered yet."
                 )
             );
@@ -212,7 +163,7 @@ namespace Monogum.BricksBucket.Core.Examples.DynamicProperties.Editor
             GUI.Button(rectButtonCancel, "Cancel");
             if (EditorGUI.EndChangeCheck())
             {
-                _dynRef.SetComponent(null);
+                _reference.SetComponent(null);
             }
 
             EditorGUI.BeginChangeCheck();
@@ -220,269 +171,249 @@ namespace Monogum.BricksBucket.Core.Examples.DynamicProperties.Editor
             if (EditorGUI.EndChangeCheck())
             {
                 HardwiredFileWriter.RegisterType(
-                    _dynRef.Component.GetType(),
-                    _dynRef.ScriptData,
-                    _dynRef.ComponentRegistry
+                    _reference.Component.GetType(),
+                    _reference.ScriptData,
+                    _reference.Registry
                 );
             }
-
-            StoreData(property, dynamicValue);
-            return;
         }
-
-        private void SelectProperty(Rect position, SerializedProperty property,
-            GUIContent label)
+        
+        private void SelectProperty(Rect position)
         {
-            var dynamicValue = property.FindPropertyRelative("value");
-            //  Shortcuts.
-            var objectValue = _dynRef.Component;
-            var type = objectValue.GetType();
-
-            //  Property Selection.
-            _propertiesInfo = type.GetProperties(
+            // Dropdown Setup
+            _propertiesInfo = _reference.Component.GetType().GetProperties(
                 (BindingFlags.Public | BindingFlags.Instance)
             );
-
             _dropdown.Clear();
-            _dropdown.Add("None");
-            var validPropertyInfos = new List<PropertyInfo>();
+            _dropdown.Add("[Property]");
             foreach (var info in _propertiesInfo)
             {
                 var isValid =
                     info.CanRead &&
                     info.CanWrite &&
-                    !info.IsDefined(
-                        typeof(System.ObsoleteAttribute),
-                        inherit: true
-                    );
-                if (isValid)
-                {
-                    _dropdown.Add(info.Name);
-                    validPropertyInfos.Add(info);
-                }
+                    !info.IsDefined(typeof(ObsoleteAttribute), inherit: true);
+                if (!isValid) continue;
+                _dropdown.Add(info.Name);
             }
-
-            var propIndex = 0;
-            var inList = false;
-            for (var i = 0; i < _dropdown.Count; i++)
-                if (property.FindPropertyRelative("property").stringValue ==
-                    _dropdown[i])
-                {
-                    propIndex = i;
-                    inList = true;
-                }
-
-            if (!inList)
-                _dynRef.SetProperty(string.Empty);
-
-
-            //  Draw properties.
-            var rectObject = position;
-            rectObject.width = EditorGUIUtility.labelWidth;
-            var rectProperty = rectObject;
-            rectProperty.x += rectObject.width;
-            var rectValue = position;
-            rectValue.width -= EditorGUIUtility.labelWidth;
-            rectValue.x += EditorGUIUtility.labelWidth;
-            rectProperty.width -= Padding;
-
-
-            propIndex = EditorGUI.Popup(
-                rectProperty,
-                propIndex,
+            
+            // Draw Dropdown.
+            EditorGUI.BeginChangeCheck();
+            var propertyIndex = EditorGUI.Popup(
+                position,
+                "Property",
+                selectedIndex: 0,
                 _dropdown.ToArray()
             );
-            if (propIndex != 0)
+            if (EditorGUI.EndChangeCheck())
             {
-                _dynRef.SetProperty(_dropdown[propIndex]);
-                _dynRef.Value.SystemType =
-                    validPropertyInfos[propIndex].PropertyType;
+                _reference.SetProperty(propertyIndex != 0
+                    ? _dropdown[propertyIndex]
+                    : string.Empty);
             }
-            else
-                _dynRef.SetProperty(string.Empty);
-
-
-            StoreData(property, dynamicValue);
         }
 
-        private void DrawProperties(Rect position, SerializedProperty property,
-        GUIContent label)
+        private void DrawReference(Rect position)
         {
             
-                switch (_dynRef.Value.Type)
-                {
+            var propertyPosition = position;
+            propertyPosition.width -= 30;
+            var rectButtonRemove = position;
+            rectButtonRemove.width = 25;
+            rectButtonRemove.x = position.x + propertyPosition.width + 5;
 
-                    case DynamicValueType.NULL:
-                        EditorGUI.LabelField(position,new GUIContent( "Null"), label);
-                        break;
+            if (GUI.Button(rectButtonRemove,
+                new GUIContent(
+                    EditorGUIUtility.IconContent("console.warnicon.sml").image,
+                    $"Reset this reference."
+                )))
+            {
+                _reference.SetComponent(null);
+                return;
+            }
 
-                    case DynamicValueType.BOOLEAN:
-                        _dynRef.SetValue(
-                            EditorGUI.Toggle(
-                                position,
-                                label,
-                                (bool) _dynRef.Value.Get(typeof(bool))
-                            )
-                        );
-                        break;
-
-                    case DynamicValueType.INTEGER:
-                        _dynRef.SetValue(
-                            EditorGUI.IntField(
-                                position,
-                                label,
-                                (int) _dynRef.Value.Get(typeof(int))
-                            )
-                        );
-                        break;
-
-                    case DynamicValueType.FLOAT:
-                        _dynRef.SetValue(
-                            EditorGUI.FloatField(
-                                position,
-                                label,
-                                (float) _dynRef.Value.Get(typeof(float))
-                            )
-                        );
-                        break;
-
-                    case DynamicValueType.DOUBLE:
-                        _dynRef.SetValue(
-                            EditorGUI.DoubleField(
-                                position,
-                                label,
-                                (double) _dynRef.Value.Get(
-                                    typeof(double))
-                            )
-                        );
-                        break;
-
-                    case DynamicValueType.VECTOR2:
-                        _dynRef.SetValue(
-                            EditorGUI.Vector2Field(
-                                position,
-                                label,
-                                (Vector2) _dynRef.Value.Get(
-                                    typeof(Vector2))
-                            )
-                        );
-                        break;
-
-                    case DynamicValueType.VECTOR3:
-                        _dynRef.SetValue(
-                            EditorGUI.Vector3Field(
-                                position,
-                                label,
-                                (Vector3) _dynRef.Value.Get(
-                                    typeof(Vector3))
-                            )
-                        );
-                        break;
-
-                    case DynamicValueType.VECTOR4:
-                        _dynRef.SetValue(
-                            EditorGUI.Vector4Field(
-                                position,
-                                label,
-                                (Vector4) _dynRef.Value.Get(
-                                    typeof(Vector4))
-                            )
-                        );
-                        break;
-
-                    case DynamicValueType.QUATERNION:
-                        var aux = EditorGUI.Vector4Field(
-                            position,
-                            label,
-                            (Vector4) _dynRef.Value.Get(typeof(Vector4))
-                        );
-                        _dynRef.SetValue(
-                            new Quaternion(aux.x, aux.y, aux.z, aux.w)
-                        );
-                        break;
-
-                    case DynamicValueType.COLOR:
-                        _dynRef.SetValue(
-                            EditorGUI.ColorField(
-                                position,
-                                label,
-                                (Color) _dynRef.Value.Get(typeof(Color))
-                            )
-                        );
-                        break;
-
-                    case DynamicValueType.STRING:
-                        _dynRef.SetValue(
-                            EditorGUI.TextField(
-                                position,
-                                label,
-                                (string) _dynRef.Value.Get(
-                                    typeof(string))
-                            )
-                        );
-                        break;
-
-                    case DynamicValueType.CURVE:
-                        _dynRef.SetValue(
-                            EditorGUI.CurveField(
-                                position,
-                                label,
-                                _dynRef.Value.Get(
-                                    typeof(AnimationCurve)
-                                ) as AnimationCurve
-                            )
-                        );
-                        break;
-
-                    case DynamicValueType.ASSET:
-                        var component = _dynRef.Value.Get(
-                            typeof(Object)
-                        ) as Object;
-                        _dynRef.SetValue(EditorGUI.ObjectField(
-                            position,
-                            label,
-                            component,
-                            component != null
-                                ? component.GetType()
-                                : typeof(Object),
-                            true
-                        ));
-                        break;
-
-                    default: throw new System.IndexOutOfRangeException();
-                }
+            var label = new GUIContent(_reference.Property);
             
-        }
+            EditorGUI.BeginChangeCheck();
+            
+            var type = _reference.GetPropertyType();
+            if (type == null)
+            {
+                EditorGUI.LabelField(
+                    position,
+                    label,
+                    new GUIContent("Not Supported Yet")
+                );
+                return;
+            }
+            
+            if (type == typeof(bool))
+            {
+                _reference.SetValue(
+                    EditorGUI.Toggle(
+                        propertyPosition,
+                        label,
+                        (bool) _reference.GetValue()
+                    )
+                );
+            }
+            
+            if (type == typeof(int))
+            {
+                _reference.SetValue(
+                    EditorGUI.IntField(
+                        propertyPosition,
+                        label,
+                        (int) _reference.GetValue()
+                    )
+                );
+            }
+            
+            if (type == typeof(float))
+            {
+                _reference.SetValue(
+                    EditorGUI.FloatField(
+                        propertyPosition,
+                        label,
+                        (float) _reference.GetValue()
+                    )
+                );
+            }
+            
+            if (type == typeof(double))
+            {
+                _reference.SetValue(
+                    EditorGUI.DoubleField(
+                        propertyPosition,
+                        label,
+                        (double) _reference.GetValue()
+                    )
+                );
+            }
+            
+            if (type == typeof(Vector2))
+            {
+                _reference.SetValue(
+                    EditorGUI.Vector2Field(
+                        propertyPosition,
+                        label,
+                        (Vector2) _reference.GetValue()
+                    )
+                );
+            }
+            
+            if (type == typeof(Vector3))
+            {
+                _reference.SetValue(
+                    EditorGUI.Vector3Field(
+                        propertyPosition,
+                        label,
+                        (Vector3) _reference.GetValue()
+                    )
+                );
+            }
+            
+            if (type == typeof(Vector4))
+            {
+                _reference.SetValue(
+                    EditorGUI.Vector4Field(
+                        propertyPosition,
+                        label,
+                        (Vector4) _reference.GetValue()
+                    )
+                );
+            }
+            
+            if (type == typeof(Quaternion))
+            {
+                var aux = EditorGUI.Vector4Field(
+                    propertyPosition,
+                    label,
+                    (Vector4) _reference.GetValue()
+                );
+                _reference.SetValue(
+                    new Quaternion(aux.x, aux.y, aux.z, aux.w)
+                );
+            }
+            
+            if (type == typeof(Color))
+            {
+                _reference.SetValue(
+                    EditorGUI.ColorField(
+                        propertyPosition,
+                        label,
+                        (Color) _reference.GetValue()
+                    )
+                );
+            }
+            
+            if (type == typeof(string))
+            {
+                _reference.SetValue(
+                    EditorGUI.TextField(
+                        propertyPosition,
+                        label,
+                        (string) _reference.GetValue()
+                    )
+                );
+            }
+            
+            if (type == typeof(AnimationCurve))
+            {
+                _reference.SetValue(
+                    EditorGUI.CurveField(
+                        propertyPosition,
+                        label,
+                        _reference.GetValue() as AnimationCurve
+                    )
+                );
+            }
+            
+            if (type == typeof(Object))
+            {
+                var component = _reference.GetValue() as Object;
+                _reference.SetValue(EditorGUI.ObjectField(
+                    propertyPosition,
+                    label,
+                    component,
+                    component != null
+                        ? component.GetType()
+                        : typeof(Object),
+                    true
+                ));
+            }
+            
+            if (type.IsSubclassOf(typeof(Object)))
+            {
+                _reference.SetValue(
+                    EditorGUI.ObjectField(
+                        propertyPosition,
+                        label,
+                        _reference.GetValue() as Object, 
+                        type,
+                        true
+                    )
+                );
+            }
 
+            if (EditorGUI.EndChangeCheck())
+            {
+                EditorUtility.SetDirty(_reference.Component);
+            }
+        }
+            
         /// <summary>
         /// Stores the data.
         /// </summary>
         /// <param name="property">Parent Property.</param>
-        /// <param name="dynProperty">Dynamic Value Property</param>
-        private void StoreData(SerializedProperty property,
-            SerializedProperty dynProperty)
+        private void StoreData(SerializedProperty property)
         {
-
             property.FindPropertyRelative("component").objectReferenceValue =
-                _dynRef.Component;
+                _reference.Component;
             property.FindPropertyRelative("property").stringValue =
-                _dynRef.Property;
-            
-            
-            dynProperty.FindPropertyRelative("stringValue").stringValue =
-                (string) _dynRef.Value.Get(typeof(string));
-            
-            dynProperty.FindPropertyRelative("curve").animationCurveValue =
-                _dynRef.Value.Get(typeof(AnimationCurve)) as AnimationCurve;
-            
-            dynProperty.FindPropertyRelative("asset").objectReferenceValue =
-                _dynRef.Value.Get(typeof(Object)) as Object;
-            dynProperty.FindPropertyRelative("vector").vector4Value =
-                (Vector4) _dynRef.Value.Get(typeof(Vector4));
-            dynProperty.FindPropertyRelative("type").enumValueIndex =
-                (int) _dynRef.Value.Type;
+                _reference.Property;
         }
-
+        
         #endregion
+        
     }
 }

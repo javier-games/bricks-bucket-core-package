@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Monogum.BricksBucket.Core.Generics
@@ -42,6 +41,14 @@ namespace Monogum.BricksBucket.Core.Generics
         /// <param name="property">Property name.</param>
         /// <returns>The value.</returns>
         object GetValue(Object component, string property);
+        
+        /// <summary>
+        /// Gets the type of the property.
+        /// </summary>
+        /// <param name="component">Component of the property.</param>
+        /// <param name="property">Property name.</param>
+        /// <returns>The value.</returns>
+        Type GetPropertyType(Object component, string property);
 
         /// <summary>
         /// Sets the value of the given property of the given component.

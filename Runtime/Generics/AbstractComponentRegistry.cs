@@ -59,6 +59,17 @@ namespace Monogum.BricksBucket.Core.Generics
 		}
 			= new Dictionary<string, Dictionary<string, Func<object, object>>>();
 		
+		
+		/// <summary>
+		/// Dictionary of functions to return values.
+		/// </summary>
+		protected virtual
+			Dictionary<string, Dictionary<string, Type>> PropertyType
+		{
+			get;
+		}
+			= new Dictionary<string, Dictionary<string, Type>>();
+		
 		/// <inheritdoc cref="IComponentRegistry.ComponentTypes"/>
 		public IEnumerable<Type> ComponentTypes => ComponentTypesList;
 		
@@ -118,6 +129,23 @@ namespace Monogum.BricksBucket.Core.Generics
 				ContainsProperty(component, property);
 			
 			return !valid ? null : Get[componentName][property](component);
+		}
+
+		/// <inheritdoc cref="IComponentRegistry.GetPropertyType"/>
+		public Type GetPropertyType(Object component, string property)
+		{
+			if (component == null)
+			{
+				return null;
+			}
+			
+			var componentName = component.GetType().FullName;
+			var valid =
+				!string.IsNullOrWhiteSpace(componentName) &&
+				ContainsComponent(component) &&
+				ContainsProperty(component, property);
+			
+			return !valid ? null : PropertyType[componentName][property];
 		}
 
 		/// <inheritdoc cref="IComponentRegistry.SetValue"/>

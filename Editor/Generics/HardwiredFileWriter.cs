@@ -164,7 +164,7 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                 path,
                 false
             );
-            
+
             var content = Template
                 .Replace("{OLD_NAMESPACE}", BricksBucketNameSpace)
                 .Replace("{NEW_NAMESPACE}", hardwired.NameSpace)
@@ -174,7 +174,9 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                 .Replace("{DATE}", $"{DateTime.Now:F}")
                 .Replace("{TYPES}", GetTypes(registeredTypes))
                 .Replace("{ACTIONS}", GetActionsContent(registeredTypes))
-                .Replace("{FUNCTIONS}", GetFunctionsContent(registeredTypes));
+                .Replace("{FUNCTIONS}", GetFunctionsContent(registeredTypes))
+                .Replace("{PROPERTY_TYPES}",
+                    GetTypesPropertiesContent(registeredTypes));
 
             _writer.Write(content);
             _writer.Close();
@@ -364,6 +366,71 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
             }
             return getDictionary;
         }
+
+        /// <summary>
+        /// Gets the dictionaries of Actions in a string.
+        /// </summary>
+        /// <param name="registeredTypes">List of current registered types.
+        /// </param>
+        /// <returns>Empty if there is any type.</returns>
+        private static string GetTypesPropertiesContent(
+            IReadOnlyList<Type> registeredTypes)
+        {
+            var getDictionary = string.Empty;
+            if (registeredTypes == null || registeredTypes.Count == 0)
+            {
+                return getDictionary;
+            }
+
+            for (var i = 0; i < registeredTypes.Count; i++)
+            {
+
+                var subContent = string.Empty;
+                var propertiesInfo = registeredTypes[i].GetProperties(
+                    BindingFlags.Public | BindingFlags.Instance
+                );
+                var propertiesToAdd = 0;
+                foreach (PropertyInfo propertyInfo in propertiesInfo)
+                    if (
+                        propertyInfo.CanRead &&
+                        propertyInfo.CanWrite &&
+                        !propertyInfo.IsDefined(typeof(ObsoleteAttribute), true)
+                    )
+                        propertiesToAdd++;
+                var propertiesAdded = 0;
+
+                //  Writing Properties.
+                for (var j = 0; j < propertiesInfo.Length; j++)
+                {
+                    if (!propertiesInfo[j].CanRead ||
+                        !propertiesInfo[j].CanWrite || propertiesInfo[j]
+                            .IsDefined(typeof(ObsoleteAttribute), true))
+                        continue;
+
+                    
+                    subContent += TypesTemplate
+                        .Replace(
+                            "{PROPERTY_TYPE}", 
+                            propertiesInfo[j].PropertyType.FullName
+                                .Replace('+', '.'))
+                        .Replace("{PROPERTY_NAME}",
+                            propertiesInfo[j].Name);
+
+                    propertiesAdded++;
+                    if (propertiesAdded < propertiesToAdd)
+                        subContent += ",";
+                }
+
+                //  Writing Region Component.
+                getDictionary += TypesRegionTemplate
+                    .Replace("{OBJECT_NAME}", registeredTypes[i].FullName)
+                    .Replace("{PROPERTY_TYPES}", subContent);
+                    
+                if (i < registeredTypes.Count - 1)
+                    getDictionary += ",\n";
+            }
+            return getDictionary;
+        }
         
         #endregion
         
@@ -462,6 +529,16 @@ namespace {NEW_NAMESPACE}
             {FUNCTIONS}
         };
 
+		/// <inheritdoc cref=""{OLD_NAMESPACE}.AbstractComponentRegistry.PropertyType""/>
+        protected override
+			Dictionary<string, Dictionary<string, Type>> PropertyType
+		{
+			get;
+		} = new Dictionary<string, Dictionary<string, Type>>
+		{
+            {PROPERTY_TYPES}
+        };
+
         #region Methods
 #if UNITY_EDITOR
 
@@ -547,6 +624,31 @@ namespace {NEW_NAMESPACE}
                         ""{PROPERTY_NAME}"",
                         (component) =>
                             (component as {OBJECT_NAME}).{PROPERTY_NAME}
+                    }";
+        
+        /// <summary>
+        /// Template for a region on a functions dictionary.
+        /// </summary>
+        private const string TypesRegionTemplate = @"                
+            {
+				#region {OBJECT_NAME}
+
+                ""{OBJECT_NAME}"",
+                new Dictionary<string, Type>
+                {
+                    {PROPERTY_TYPES}
+                }
+
+                #endregion
+            }";
+        
+        /// <summary>
+        /// Template for a function on a dictionary.
+        /// </summary>
+        private const string TypesTemplate = @"
+                    {
+                        ""{PROPERTY_NAME}"",
+                        typeof({PROPERTY_TYPE})
                     }";
 
         #endregion

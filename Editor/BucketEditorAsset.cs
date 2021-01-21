@@ -179,5 +179,26 @@ namespace Monogum.BricksBucket.Core.Editor
                 AssetDatabase.Refresh ();
             }
         }
+        
+        /// <summary>
+        /// Finds all assets of the given type in project.
+        /// </summary>
+        /// <typeparam name="T">Type of asset to look for.</typeparam>
+        /// <returns>List of objects of type T.</returns>
+        public static List<T> FindAllAssets<T>() where T : Object
+        {
+            var assets = new List<T>();
+            var guids = AssetDatabase.FindAssets($"t:{typeof(T)}");
+            for( var i = 0; i < guids.Length; i++ )
+            {
+                var assetPath = AssetDatabase.GUIDToAssetPath( guids[i] );
+                var asset = AssetDatabase.LoadAssetAtPath<T>( assetPath );
+                if( asset != null )
+                {
+                    assets.Add(asset);
+                }
+            }
+            return assets;
+        }
     }
 }

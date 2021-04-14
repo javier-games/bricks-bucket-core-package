@@ -8,12 +8,17 @@
 - Define symbols manager system.
 
 
-## `1.0.2` - January 13th, 2020
+## `1.0.3` - April 14th, 2021
+### Fixed
+- Fixed HardwiredFileWriter that includes Editor native methods.
+
+
+## `1.0.2` - January 13th, 2021
 ### Fixed
 - Fixed Reference Example
 
 
-## `1.0.1` - January 13th, 2020
+## `1.0.1` - January 13th, 2021
 ### Added
 - Generics example.
 ### Fixed

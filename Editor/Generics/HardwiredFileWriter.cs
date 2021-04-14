@@ -44,6 +44,13 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
             );
         }
 
+        /// <summary>
+        /// Resets the File with the given info.
+        /// </summary>
+        /// <param name="path">Path of the file.</param>
+        /// <param name="extension">Extension of the file</param>
+        /// <param name="nameSpace">Namespace of the file.</param>
+        /// <param name="className">Name of the class.</param>
         public static void ResetFile(
             string path, string extension, string nameSpace, string className)
         {
@@ -241,6 +248,18 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
         }
 
         /// <summary>
+        /// Whether the given property is valid.
+        /// </summary>
+        /// <param name="propertyInfo">Property to check.</param>
+        /// <returns><value>False</value>> if the property does not
+        /// complains with the requirements.</returns>
+        private static bool IsValidProperty(PropertyInfo propertyInfo) =>
+            propertyInfo.CanRead
+            && propertyInfo.CanWrite
+            && !propertyInfo.IsDefined(typeof(ObsoleteAttribute), true)
+            && propertyInfo.Name != "runInEditMode";
+
+        /// <summary>
         /// Gets the dictionaries of Actions in a string.
         /// </summary>
         /// <param name="registeredTypes">List of current registered types.
@@ -265,20 +284,14 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                 );
                 var propertiesToAdd = 0;
                 foreach (var propertyInfo in propertiesInfo)
-                    if (
-                        propertyInfo.CanRead &&
-                        propertyInfo.CanWrite &&
-                        !propertyInfo.IsDefined(typeof(ObsoleteAttribute), true)
-                    )
+                    if (IsValidProperty(propertyInfo))
                         propertiesToAdd++;
                 var propertiesAdded = 0;
 
                 //  Writing Properties.
                 for (var j = 0; j < propertiesInfo.Length; j++)
                 {
-                    if (!propertiesInfo[j].CanRead ||
-                        !propertiesInfo[j].CanWrite || propertiesInfo[j]
-                            .IsDefined(typeof(ObsoleteAttribute), true))
+                    if (!IsValidProperty(propertiesInfo[j]))
                         continue;
                     subContent += ActionTemplate
                         .Replace("{PROPERTY_NAME}", propertiesInfo[j].Name)
@@ -330,21 +343,15 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                     BindingFlags.Public | BindingFlags.Instance
                 );
                 var propertiesToAdd = 0;
-                foreach (PropertyInfo propertyInfo in propertiesInfo)
-                    if (
-                        propertyInfo.CanRead &&
-                        propertyInfo.CanWrite &&
-                        !propertyInfo.IsDefined(typeof(ObsoleteAttribute), true)
-                    )
+                foreach (var propertyInfo in propertiesInfo)
+                    if (IsValidProperty(propertyInfo))
                         propertiesToAdd++;
                 var propertiesAdded = 0;
 
                 //  Writing Properties.
                 for (var j = 0; j < propertiesInfo.Length; j++)
                 {
-                    if (!propertiesInfo[j].CanRead ||
-                        !propertiesInfo[j].CanWrite || propertiesInfo[j]
-                            .IsDefined(typeof(ObsoleteAttribute), true))
+                    if (!IsValidProperty(propertiesInfo[j]))
                         continue;
                     
                     subContent += FunctionTemplate
@@ -390,24 +397,17 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
                     BindingFlags.Public | BindingFlags.Instance
                 );
                 var propertiesToAdd = 0;
-                foreach (PropertyInfo propertyInfo in propertiesInfo)
-                    if (
-                        propertyInfo.CanRead &&
-                        propertyInfo.CanWrite &&
-                        !propertyInfo.IsDefined(typeof(ObsoleteAttribute), true)
-                    )
+                foreach (var propertyInfo in propertiesInfo)
+                    if (IsValidProperty(propertyInfo))
                         propertiesToAdd++;
                 var propertiesAdded = 0;
 
                 //  Writing Properties.
                 for (var j = 0; j < propertiesInfo.Length; j++)
                 {
-                    if (!propertiesInfo[j].CanRead ||
-                        !propertiesInfo[j].CanWrite || propertiesInfo[j]
-                            .IsDefined(typeof(ObsoleteAttribute), true))
+                    if (!IsValidProperty(propertiesInfo[j]))
                         continue;
 
-                    
                     subContent += TypesTemplate
                         .Replace(
                             "{PROPERTY_TYPE}", 
@@ -464,6 +464,7 @@ using System.Collections.Generic;
 // ReSharper disable BuiltInTypeReferenceStyle
 // ReSharper disable UnusedMember.Local
 // ReSharper disable RedundantNameQualifier
+// ReSharper disable StringLiteralTypo
 
 namespace {NEW_NAMESPACE}
 {
@@ -652,7 +653,5 @@ namespace {NEW_NAMESPACE}
                     }";
 
         #endregion
-        
-        
     }
 }

@@ -43,7 +43,7 @@ namespace Monogum.BricksBucket.Core.Attributes
 		#region Fields
 
 		/// <summary> Collection of defined values. </summary>
-		public readonly object[] valuesArray;
+		public readonly object[] ValuesArray;
 
 		#endregion
 
@@ -53,7 +53,7 @@ namespace Monogum.BricksBucket.Core.Attributes
 		/// <summary> Creates new instance of Defined Values. </summary>
 		/// <param name="definedValues"> Defined values to use. </param>
 		public DefinedValuesAttribute (params object[] definedValues) =>
-			valuesArray = definedValues;
+			ValuesArray = definedValues;
 
 		#endregion
 	}

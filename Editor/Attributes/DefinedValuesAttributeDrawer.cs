@@ -114,7 +114,7 @@ namespace Monogum.BricksBucket.Core.Editor.Attributes
         {
             _attribute = (DefinedValuesAttribute) attribute;
 
-            object[] values = _attribute.valuesArray;
+            object[] values = _attribute.ValuesArray;
 
             if (values == null || values.Length == 0) return;
 

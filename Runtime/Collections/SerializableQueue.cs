@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Monogum.BricksBucket.Core.Collections
 {
@@ -19,8 +20,9 @@ namespace Monogum.BricksBucket.Core.Collections
         #region Fields
 
         /// <summary> List for keys, used just for serialization. </summary>
+        [FormerlySerializedAs("m_values")]
         [SerializeField, HideInInspector]
-        private List<T> m_values = new List<T> ();
+        private List<T> values = new List<T> ();
 
         #endregion
 
@@ -30,15 +32,15 @@ namespace Monogum.BricksBucket.Core.Collections
         void ISerializationCallbackReceiver.OnAfterDeserialize ()
         {
             Clear ();
-            for (int i = 0; i < m_values.Count; i++) Enqueue (m_values[i]);
+            for (int i = 0; i < values.Count; i++) Enqueue (values[i]);
         }
 
         /// <summary> Callback before been serialized. </summary>
         void ISerializationCallbackReceiver.OnBeforeSerialize ()
         {
-            m_values.Clear ();
+            values.Clear ();
             T[] items = ToArray ();
-            for (int i = 0; i < items.Length; i++) m_values.Add (items[i]);
+            for (int i = 0; i < items.Length; i++) values.Add (items[i]);
         }
 
         #endregion

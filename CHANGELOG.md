@@ -4,8 +4,13 @@
 ### Added
 - Log system in Bucket Class.
 - Plugins Newtonsoft.Json.
-- Pooling System working with nested prefabs.
+- Pooling System working with nested prefabs and UI.
 - Define symbols manager system.
+
+
+## `1.0.4` - October 26th, 2021
+### Added
+- Added basic pooling system.
 
 
 ## `1.0.3` - April 14th, 2021

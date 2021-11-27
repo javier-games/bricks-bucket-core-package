@@ -1,0 +1,18 @@
+{
+    "name": "Monogum.BricksBucket.Examples.DynamicValues.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:8e275888f7893418e8887b593faa5a02",
+        "GUID:9e589f2e92df345b1afd5bad5ffe5e06",
+        "GUID:1f1dc71ef9432f149a07a6ececdec907"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

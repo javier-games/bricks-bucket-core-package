@@ -8,6 +8,11 @@
 - Define symbols manager system.
 
 
+## `1.0.6` - November 27th, 2021
+### Fixed
+- Missing Ssembly Def.
+
+
 ## `1.0.5` - October 26th, 2021
 ### Fixed
 - Fixed missing changes.

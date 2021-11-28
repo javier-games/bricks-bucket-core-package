@@ -2135,6 +2135,7 @@ namespace Monogum.BricksBucket.Core.Examples.DynamicProperties
         };
 
         #region Methods
+        /*
 #if UNITY_EDITOR
 
         /// <summary>
@@ -2156,6 +2157,7 @@ namespace Monogum.BricksBucket.Core.Examples.DynamicProperties
         }
         
 #endif
+        */
         #endregion
 
     }

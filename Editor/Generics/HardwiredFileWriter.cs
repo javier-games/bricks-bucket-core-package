@@ -257,7 +257,12 @@ namespace Monogum.BricksBucket.Core.Generics.Editor
             propertyInfo.CanRead
             && propertyInfo.CanWrite
             && !propertyInfo.IsDefined(typeof(ObsoleteAttribute), true)
-            && propertyInfo.Name != "runInEditMode";
+            && propertyInfo.Name != "runInEditMode"
+            && propertyInfo.Name != "useGUILayout"
+            && propertyInfo.Name != "tag"
+            && propertyInfo.Name != "name"
+            && propertyInfo.Name != "hideFlags"
+            && propertyInfo.Name != "enabled";
 
         /// <summary>
         /// Gets the dictionaries of Actions in a string.

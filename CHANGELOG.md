@@ -8,9 +8,14 @@
 - Define symbols manager system.
 
 
-## `1.0.7s` - November 28th, 2021
+## `1.0.9` - February 8th, 2023
 ### Fixed
-- Missing Ssembly Def.
+- Fixed code for different versions of C#.
+
+
+## `1.0.7` - November 28th, 2021
+### Fixed
+- Missing Assembly Def.
 
 
 ## `1.0.6` - November 27th, 2021

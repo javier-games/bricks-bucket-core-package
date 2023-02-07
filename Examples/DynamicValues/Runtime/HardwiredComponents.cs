@@ -440,12 +440,6 @@ namespace Monogum.BricksBucket.Core.Examples.DynamicProperties
                                 (UnityEngine.Vector4) value
                     },
                     {
-                        "useViewFrustumForShadowCasterCull",
-                        (component, value) =>
-                            (component as UnityEngine.Light).useViewFrustumForShadowCasterCull =
-                                (System.Boolean) value
-                    },
-                    {
                         "shadowCustomResolution",
                         (component, value) =>
                             (component as UnityEngine.Light).shadowCustomResolution =
@@ -836,12 +830,6 @@ namespace Monogum.BricksBucket.Core.Examples.DynamicProperties
                                 (System.Boolean) value
                     },
                     {
-                        "raycastPadding",
-                        (component, value) =>
-                            (component as UnityEngine.UI.Image).raycastPadding =
-                                (UnityEngine.Vector4) value
-                    },
-                    {
                         "useGUILayout",
                         (component, value) =>
                             (component as UnityEngine.UI.Image).useGUILayout =
@@ -1200,11 +1188,6 @@ namespace Monogum.BricksBucket.Core.Examples.DynamicProperties
                             (component as UnityEngine.Light).boundingSphereOverride
                     },
                     {
-                        "useViewFrustumForShadowCasterCull",
-                        (component) =>
-                            (component as UnityEngine.Light).useViewFrustumForShadowCasterCull
-                    },
-                    {
                         "shadowCustomResolution",
                         (component) =>
                             (component as UnityEngine.Light).shadowCustomResolution
@@ -1532,11 +1515,6 @@ namespace Monogum.BricksBucket.Core.Examples.DynamicProperties
                         "raycastTarget",
                         (component) =>
                             (component as UnityEngine.UI.Image).raycastTarget
-                    },
-                    {
-                        "raycastPadding",
-                        (component) =>
-                            (component as UnityEngine.UI.Image).raycastPadding
                     },
                     {
                         "useGUILayout",
